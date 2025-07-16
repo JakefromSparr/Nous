@@ -13,7 +13,7 @@ But the game is really playing them.
 ## How It Works
 
 - **Trivia Cards** test knowledge in categories of *Mind*, *Body*, and *Soul*. But each choice is scored in secret, revealing traits and tendencies.
-- **Barnum Cards** interpret these traits through *Divinations*, *Group Dynamics*, and eerie *Directions*—crafted to feel uncomfortably personal.
+- **Fate Cards** interpret these traits through *Divinations*, *Group Dynamics*, and eerie *Directions*—crafted to feel uncomfortably personal.
 - **The Last Deck** delivers final questions, secret awards, and a group reading that feels… too accurate.
 
 ---
