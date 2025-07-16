@@ -118,26 +118,34 @@ const UI = (() => {
   const getWelcomeSelection = () => welcomeOptions[welcomeIndex]?.textContent.trim();
 
   const updateScreen = (screenName) => {
-    screens.forEach(screen => {
-      screen.hidden = true;
-      screen.setAttribute('aria-hidden', 'true');
-    });
+    // Trigger "inky black" transition
+    appContainer.classList.add('is-transitioning');
 
-    const newScreen = document.querySelector(`[data-screen="${screenName}"]`);
-    if (newScreen) {
-      newScreen.hidden = false;
-      newScreen.setAttribute('aria-hidden', 'false');
-    }
+    setTimeout(() => {
+      screens.forEach(screen => {
+        screen.hidden = true;
+        screen.setAttribute('aria-hidden', 'true');
+      });
 
-    appContainer.setAttribute('data-game-state', screenName);
-    controller.setAttribute('data-controller-state', screenName);
-    if (agentLog) agentLog.textContent = `Last state: ${screenName}`;
+      const newScreen = document.querySelector(`[data-screen="${screenName}"]`);
+      if (newScreen) {
+        newScreen.hidden = false;
+        newScreen.setAttribute('aria-hidden', 'false');
+      }
 
-    configureButtons(screenName);
+      appContainer.setAttribute('data-game-state', screenName);
+      controller.setAttribute('data-controller-state', screenName);
+      if (agentLog) agentLog.textContent = `Last state: ${screenName}`;
 
-    if (screenName === 'welcome') {
-      updateWelcomeHighlight();
-    }
+      configureButtons(screenName);
+
+      if (screenName === 'welcome') {
+        updateWelcomeHighlight();
+      }
+
+      // Remove transition class to fade back in
+      appContainer.classList.remove('is-transitioning');
+    }, 700);
   };
 
   const configureButtons = (screenName) => {
@@ -145,15 +153,15 @@ const UI = (() => {
 
     ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
       const btn = buttons[id];
-      const label = labels[id];
+      const labelSpan = btn.querySelector('.button-label');
       const def = config[i];
 
-      if (def) {
-        if (label) label.innerText = def.label;
+      if (def && labelSpan) {
+        labelSpan.innerText = def.label;
         btn.disabled = !!def.disabled;
         btn.setAttribute('data-action', def.action || '');
-      } else {
-        if (label) label.innerText = '';
+      } else if (labelSpan) {
+        labelSpan.innerText = '';
         btn.disabled = true;
         btn.removeAttribute('data-action');
       }

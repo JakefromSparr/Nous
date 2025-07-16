@@ -21,13 +21,22 @@
 
         <!-- 1. Welcome Screen (Visible by default) -->
         <section id="screen-welcome" class="game-screen" data-screen="welcome">
-            <h1>Nous: A Game for Connoisseurs</h1>
+            <h1>NOUS</h1>
+            <h2 class="subtitle">A GAME FOR CONNOISSEURS</h2>
             <p>Will what you know save you from what you don’t?</p>
+            
             <ul id="welcome-options">
-                <li class="selected">Play</li>
-                <li>Rules</li>
-                <li>Options</li>
+                <li class="selected"><span>&#9658;</span> Play</li>
+                <li><span></span> Rules</li>
+                <li><span></span> Options</li>
             </ul>
+
+            <div id="participant-entry" hidden>
+              <p>How many will be participating in tonight’s experience?</p>
+              <input type="number" id="participant-count" min="1" max="20" value="1" />
+              <button id="confirm-participants">Confirm</button>
+              <p id="participant-flavor" class="flavor-text" hidden></p>
+            </div>
         </section>
 
         <!-- 1b. Participant Select Screen -->

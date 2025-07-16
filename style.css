@@ -24,34 +24,17 @@ body {
   overflow: hidden;
   background-image: url('woodgrain-texture.jpg');
   background-size: cover;
+  margin: 0;
+}
+
+/* Make the main container take up the full space */
+#app-container {
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-}
-
-body::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at center, rgba(255, 165, 0, 0.1) 0%, rgba(26, 18, 11, 0.9) 80%);
-  animation: flicker 10s infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.95; }
-}
-
-#app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
 }
 
 .game-screen {
@@ -135,4 +118,79 @@ body::after {
   margin-top: 1rem;
   width: 100%;
   z-index: 1;
+}
+
+/* === Text Styling === */
+.game-screen {
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.game-screen p,
+.game-screen li {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.game-screen h1,
+.game-screen h2,
+.game-screen h3,
+.game-screen .highlight {
+  background: linear-gradient(to top, var(--gold-foil-dark), var(--gold-foil-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* --- New styles for Welcome Screen --- */
+.subtitle {
+  font-size: 1.2rem;
+  font-family: var(--body-font);
+  letter-spacing: 2px;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+}
+
+#welcome-options {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+#welcome-options li {
+  font-size: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+/* Hide the cursor span by default */
+#welcome-options li span {
+  display: inline-block;
+  width: 20px;
+  visibility: hidden;
+}
+
+/* Only show the cursor on the selected item */
+#welcome-options li.selected span {
+  visibility: visible;
+}
+
+/* === Screen Transition Effect === */
+
+#app-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 100;
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+#app-container.is-transitioning::before {
+  clip-path: circle(75% at 50% 50%);
+  pointer-events: auto;
 }
