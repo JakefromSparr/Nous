@@ -9,3 +9,6 @@
 - Configured package.json for Jest with jsdom environment to enable testing of browser scripts.
 - Implemented button-controlled menu navigation on the welcome screen so Up/Select/Down cycle choices and selecting Play prompts participant entry.
 - Implemented thread and scoring logic for pull/cut actions to track round progress.
+- Fixed round scoring and thread updates to reflect correct answers and round completion.
+- Starting new rounds now resets thread and displays updated scores.
+- Weave action consumes thread and randomizes the upcoming category.

@@ -94,6 +94,7 @@ const setParticipants = (count) => {
     gameState.thread = remainingWins + 1; // thread = remaining round wins + 1
     gameState.notWrongCount = 0;
     gameState.roundPassed = false;
+    gameState.currentCategory = 'Mind, Past';
   };
 
   const endRound = (won = false) => {
@@ -121,7 +122,7 @@ const setParticipants = (count) => {
   };
 
   const cutThread = () => {
-    const success = gameState.thread > 0;
+    const success = gameState.notWrongCount >= 3 && gameState.thread > 0;
     endRound(success);
     if (!success) {
       loseRoundPoints();
