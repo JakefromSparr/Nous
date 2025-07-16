@@ -22,7 +22,8 @@ const State = (() => {
     divinations: [],
     audacity: 0,
     currentCategory: 'Mind, Past',
-    difficulty: defaultSettings.difficulty
+    difficulty: defaultSettings.difficulty,
+    currentQuestion: null
   };
 
 const setParticipants = (count) => {
@@ -38,14 +39,17 @@ const setParticipants = (count) => {
     "The path of least resistance leads to the steepest fall."
   ];
 
-  const questionDeck = [
-    {
-      title: 'Mind, Past',
-      text: 'Which philosopher wrote "Critique of Pure Reason"?',
-      choices: { A: 'Nietzsche', B: 'Kant', C: 'Socrates' },
-      correct: 'B'
+  let questionDeck = [];
+
+  const loadQuestions = async () => {
+    try {
+      const response = await fetch('questions/questions.json');
+      if (!response.ok) throw new Error('Failed to load questions');
+      questionDeck = await response.json();
+    } catch (err) {
+      console.error('[LOAD QUESTIONS]', err);
     }
-  ];
+  };
 
   // --- Public Methods ---
 
@@ -60,6 +64,7 @@ const setParticipants = (count) => {
     gameState.divinations = [];
     gameState.audacity = 0;
     gameState.currentCategory = 'Mind, Past';
+    gameState.currentQuestion = null;
   };
 
   const getState = () => ({ ...gameState });
@@ -108,12 +113,27 @@ const setParticipants = (count) => {
   };
 
   const getNextQuestion = () => {
-    return questionDeck[0]; // Replace with random or category filter
+    if (questionDeck.length === 0) {
+      console.warn('[QUESTION]: Deck is empty');
+      return null;
+    }
+    const idx = Math.floor(Math.random() * questionDeck.length);
+    const q = questionDeck[idx];
+    gameState.currentQuestion = q;
+    return q;
   };
 
   const evaluateAnswer = (choice) => {
-    const question = questionDeck[0];
-    const isCorrect = choice === question.correct;
+    const question = gameState.currentQuestion;
+    if (!question) {
+      console.warn('[EVAL]: No current question');
+      return null;
+    }
+    const idxMap = { A: 0, B: 1, C: 2 };
+    const idx = idxMap[choice] ?? 0;
+    const selected = question.answers[idx];
+    const isCorrect = selected.answerClass !== 'Wrong';
+
     if (isCorrect) {
       gameState.roundScore += 10;
     } else {
@@ -122,8 +142,8 @@ const setParticipants = (count) => {
     return {
       correct: isCorrect,
       question: question.text,
-      answer: question.choices[choice],
-      explanation: 'Kant\'s work is a cornerstone of modern philosophy.',
+      answer: selected.text,
+      explanation: selected.explanation,
       outcomeText: isCorrect ? 'The thread holds.' : 'The thread frays.'
     };
   };
@@ -146,6 +166,7 @@ const setParticipants = (count) => {
 
   return {
     initializeGame,
+    loadQuestions,
     getState,
     setState,
     resetGame,

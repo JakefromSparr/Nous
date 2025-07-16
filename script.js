@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const controller = document.getElementById('controller');
 
   // --- Game Initialization ---
-  function init() {
+  async function init() {
+    await State.loadQuestions();
     UI.updateScreen('welcome');
     console.log('[INIT]: Nous initialized. Welcome.');
   }
@@ -29,11 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (action) {
       // --- Navigation ---
       case 'start-game':
-case 'start-game':
-  UI.showParticipantEntry(); // prompt input
-  break;
-        UI.updateScreen('game-lobby');
-        UI.updateDisplayValues(currentState);
+        UI.showParticipantEntry(); // prompt input
         break;
       case 'go-rules':
         UI.updateScreen('rules');
@@ -78,23 +75,27 @@ case 'start-game':
         console.log('[ACTION]: Using 1 Thread to double next points (placeholder).');
         break;
       case 'start-question':
-        UI.showQuestion({
-          title: 'Mind, Past',
-          text: 'Which philosopher wrote "Critique of Pure Reason"?',
-          choices: {
-            A: 'Nietzsche',
-            B: 'Kant',
-            C: 'Socrates'
-          }
-        });
-        UI.updateScreen('question');
+        const q = State.getNextQuestion();
+        if (q) {
+          UI.showQuestion({
+            title: q.title,
+            text: q.text,
+            choices: {
+              A: q.answers[0].text,
+              B: q.answers[1].text,
+              C: q.answers[2].text
+            }
+          });
+          UI.updateScreen('question');
+        }
         break;
 
       // --- Answer Selection ---
       case 'answer-a':
       case 'answer-b':
       case 'answer-c':
-        evaluateAnswer(action);
+        const letter = action.split('-')[1].toUpperCase();
+        evaluateAnswer(letter);
         break;
 
       // --- Post Result Actions ---
@@ -108,17 +109,13 @@ case 'start-game':
     }
   }
 
-  // --- Sample Answer Evaluation ---
-  function evaluateAnswer(action) {
-    const isCorrect = action === 'answer-b'; // Kant
-    UI.showResult({
-      correct: isCorrect,
-      question: 'Which philosopher wrote "Critique of Pure Reason"?',
-      answer: isCorrect ? 'Immanuel Kant' : 'Incorrect choice',
-      explanation: 'Kant\'s work is a cornerstone of modern philosophy.',
-      outcomeText: isCorrect ? 'The thread holds.' : 'A strand slips through your fingers...'
-    });
-    UI.updateScreen('result');
+  // --- Answer Evaluation ---
+  function evaluateAnswer(letter) {
+    const result = State.evaluateAnswer(letter);
+    if (result) {
+      UI.showResult(result);
+      UI.updateScreen('result');
+    }
   }
 
   // --- Start the Game ---
