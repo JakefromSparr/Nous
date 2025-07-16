@@ -1,0 +1,190 @@
+// === Valid Actions Set === //
+const validActions = new Set([
+  'start-game', 'go-rules', 'go-options', 'back-to-welcome',
+  'save-and-quit', 'pull-divination', 'next-round',
+  'end-round', 'double-points', 'start-question',
+  'answer-a', 'answer-b', 'answer-c',
+  'challenge-result', 'accept-result', 'return-to-lobby',
+  'restart-game', 'save-reading', 'quit-game'
+]);
+
+// === Button Configurations by Screen === //
+const buttonConfigs = {
+  welcome: [
+    { label: "Select", action: "start-game" },
+    { label: "Rules", action: "go-rules" },
+    { label: "Options", action: "go-options" }
+  ],
+  rules: [
+    { label: "Back", action: "back-to-welcome" },
+    null,
+    null
+  ],
+  options: [
+    { label: "Back", action: "back-to-welcome" },
+    null,
+    null
+  ],
+  "game-lobby": [
+    { label: "Turn Back", action: "save-and-quit" },
+    { label: "Tempt Fate", action: "pull-divination" },
+    { label: "Press On", action: "next-round" }
+  ],
+  "round-lobby": [
+    { label: "Cut the Thread", action: "end-round" },
+    { label: "Weave it to Fate", action: "double-points" },
+    { label: "Pull the Thread", action: "start-question" }
+  ],
+  question: [
+    { label: "Choose A", action: "answer-a" },
+    { label: "Choose B", action: "answer-b" },
+    { label: "Choose C", action: "answer-c" }
+  ],
+  result: [
+    { label: "Disagree", action: "challenge-result" },
+    { label: "Outcome", action: "", disabled: true },
+    { label: "Accept", action: "accept-result" }
+  ],
+  failure: [
+    { label: "[Logo]", action: "", disabled: true },
+    { label: "Return to Lobby", action: "return-to-lobby" },
+    { label: "[Logo]", action: "", disabled: true }
+  ],
+  "final-reading": [
+    { label: "Restart", action: "restart-game" },
+    { label: "Save Reading", action: "save-reading" },
+    { label: "Quit", action: "quit-game" }
+  ]
+};
+
+// === Validation: Warn if any action is not in the known list === //
+function validateButtonActions(config) {
+  for (const screen in config) {
+    config[screen].forEach((btn, idx) => {
+      if (btn && btn.action && !validActions.has(btn.action)) {
+        console.warn(`⚠️ Invalid action '${btn.action}' on button ${idx + 1} for screen '${screen}'`);
+      }
+    });
+  }
+}
+validateButtonActions(buttonConfigs);
+
+// === UI Module for Nous === //
+const UI = (() => {
+  const appContainer = document.getElementById('app-container');
+  const controller = document.getElementById('controller');
+  const agentLog = document.getElementById('last-change');
+
+  const buttons = {
+    btn1: document.getElementById('btn-1'),
+    btn2: document.getElementById('btn-2'),
+    btn3: document.getElementById('btn-3'),
+  };
+
+  const screens = document.querySelectorAll('.game-screen');
+
+  const updateScreen = (screenName) => {
+    screens.forEach(screen => {
+      screen.hidden = true;
+      screen.setAttribute('aria-hidden', 'true');
+    });
+
+    const newScreen = document.querySelector(`[data-screen="${screenName}"]`);
+    if (newScreen) {
+      newScreen.hidden = false;
+      newScreen.setAttribute('aria-hidden', 'false');
+    }
+
+    appContainer.setAttribute('data-game-state', screenName);
+    controller.setAttribute('data-controller-state', screenName);
+    if (agentLog) agentLog.textContent = `Last state: ${screenName}`;
+
+    configureButtons(screenName);
+  };
+
+  const configureButtons = (screenName) => {
+    const config = buttonConfigs[screenName] || [];
+
+    ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
+      const btn = buttons[id];
+      const def = config[i];
+
+      if (def) {
+        btn.innerText = def.label;
+        btn.disabled = !!def.disabled;
+        btn.setAttribute('data-action', def.action || '');
+      } else {
+        btn.innerText = '';
+        btn.disabled = true;
+        btn.removeAttribute('data-action');
+      }
+    });
+  };
+// Inside the UI IIFE
+const participantEntry = document.getElementById('participant-entry');
+const participantInput = document.getElementById('participant-count');
+const confirmBtn = document.getElementById('confirm-participants');
+const flavorLine = document.getElementById('participant-flavor');
+
+const showParticipantEntry = () => {
+  participantEntry.hidden = false;
+  flavorLine.hidden = true;
+};
+
+const hideParticipantEntry = () => {
+  participantEntry.hidden = true;
+};
+
+confirmBtn.addEventListener('click', () => {
+  const count = parseInt(participantInput.value);
+  if (count >= 1 && count <= 20) {
+    State.setParticipants(count);
+    flavorLine.textContent = `Strange... it looks like there are ${count + 1} of you here. Ah well.`;
+    flavorLine.hidden = false;
+    setTimeout(() => {
+      UI.updateScreen('game-lobby');
+      UI.updateDisplayValues(State.getState());
+    }, 2000);
+  }
+});
+
+  const updateDisplayValues = (data) => {
+    if ('lives' in data) document.getElementById('lives-display').textContent = data.lives;
+    if ('rounds' in data) document.getElementById('rounds-display').textContent = data.rounds;
+    if ('score' in data) document.getElementById('score-display').textContent = data.score;
+    if ('thread' in data) document.getElementById('thread-display').textContent = data.thread;
+    if ('roundScore' in data) document.getElementById('round-score').textContent = data.roundScore;
+    if ('roundNumber' in data) document.getElementById('round-number-display').textContent = data.roundNumber;
+    if ('category' in data) document.getElementById('category-hint').textContent = data.category;
+    if ('divinations' in data) document.getElementById('active-divinations').textContent = data.divinations.join(', ');
+  };
+
+  const showQuestion = (q) => {
+    document.getElementById('question-title').textContent = q.title;
+    document.getElementById('question-text').textContent = q.text;
+    document.getElementById('answer-a').textContent = q.choices.A;
+    document.getElementById('answer-b').textContent = q.choices.B;
+    document.getElementById('answer-c').textContent = q.choices.C;
+  };
+
+  const showResult = (res) => {
+    document.getElementById('result-header').textContent = res.correct ? "Correct" : "Incorrect";
+    document.getElementById('result-question').textContent = res.question;
+    document.getElementById('result-chosen-answer').textContent = res.answer;
+    document.getElementById('result-explanation').textContent = res.explanation;
+    document.getElementById('result-outcome-message').textContent = res.outcomeText;
+  };
+
+  const showFailure = (pointsLost) => {
+    document.getElementById('lost-points-display').textContent = pointsLost;
+  };
+
+  return {
+    updateScreen,
+    configureButtons,
+    updateDisplayValues,
+    showQuestion,
+    showResult,
+    showFailure
+  };
+})();
