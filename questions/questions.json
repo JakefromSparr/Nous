@@ -1,0 +1,130 @@
+[
+  {
+    "questionId": 1,
+    "category": "Mind",
+    "title": "The Shape of Things",
+    "text": "Which of these has 3 sides?",
+    "answers": [
+      {
+        "text": "Triangle",
+        "answerClass": "Typical",
+        "explanation": "Correct. A triangle has 3 sides. Classic geometry.",
+        "changePoint": 2,
+        "changeThread": 0,
+        "traitChanges": { "X": 1, "Y": 0, "Z": -1 }
+      },
+      {
+        "text": "Square",
+        "answerClass": "Revelatory",
+        "explanation": "Correct. A square has 3 sides… and one more.",
+        "changePoint": 1,
+        "changeThread": 1,
+        "traitChanges": { "X": -1, "Y": 2, "Z": 0 }
+      },
+      {
+        "text": "Circle",
+        "answerClass": "Wrong",
+        "explanation": "Incorrect. A circle is a curve with no sides.",
+        "changePoint": 0,
+        "changeThread": -1,
+        "traitChanges": { "X": 0, "Y": -1, "Z": -1 }
+      }
+    ]
+  },
+  {
+    "questionId": 2,
+    "category": "Mind",
+    "title": "Capital Offense",
+    "text": "What is the capital of France?",
+    "answers": [
+      {
+        "text": "Paris",
+        "answerClass": "Typical",
+        "explanation": "Correct. Paris is the capital of France.",
+        "changePoint": 2,
+        "changeThread": 0,
+        "traitChanges": { "X": 1, "Y": 0, "Z": 0 }
+      },
+      {
+        "text": "The letter F",
+        "answerClass": "Revelatory",
+        "explanation": "Correct! 'F' is the capital letter in 'France.' Clever.",
+        "changePoint": 1,
+        "changeThread": 1,
+        "traitChanges": { "X": 0, "Y": 2, "Z": 1 }
+      },
+      {
+        "text": "Versailles",
+        "answerClass": "Wrong",
+        "explanation": "Incorrect.Versailles was once the capital of France, specifically from 1682 to 1789 .",
+        "changePoint": 0,
+        "changeThread": -1,
+        "traitChanges": { "X": -1, "Y": -1, "Z": 0 }
+      }
+    ]
+  },
+  {
+    "questionId": 3,
+    "category": "Mind",
+    "title": "No it isn’t",
+    "text": "What is between 1 and 3?",
+    "answers": [
+      {
+        "text": "2",
+        "answerClass": "Typical",
+        "explanation": "Correct. Numerically, 2 is between 1 and 3.",
+        "changePoint": 2,
+        "changeThread": 0,
+        "traitChanges": { "X": 1, "Y": 0, "Z": 0 }
+      },
+      {
+        "text": "and",
+        "answerClass": "Revelatory",
+        "explanation": "Correct! In the text, the word 'and' is between 1 and 3.",
+        "changePoint": 1,
+        "changeThread": 1,
+        "traitChanges": { "X": 0, "Y": 2, "Z": 1 }
+      },
+      {
+        "text": "what",
+        "answerClass": "Wrong",
+        "explanation": "Incorrect. 'what' is a part of the question, not a value between.",
+        "changePoint": 0,
+        "changeThread": -1,
+        "traitChanges": { "X": -1, "Y": -1, "Z": 0 }
+      }
+    ]
+  },
+  {
+    "questionId": 4,
+    "category": "Body",
+    "title": "An Eye Witness",
+    "text": "What can’t you do if your eyes are closed?",
+    "answers": [
+      {
+        "text": "See",
+        "answerClass": "Typical",
+        "explanation": "Correct. You can’t see with your eyes closed.",
+        "changePoint": 2,
+        "changeThread": 0,
+        "traitChanges": { "X": 1, "Y": 0, "Z": 0 }
+      },
+      {
+        "text": "Close them",
+        "answerClass": "Revelatory",
+        "explanation": "Correct! If they’re already closed, you can’t close them again.",
+        "changePoint": 1,
+        "changeThread": 1,
+        "traitChanges": { "X": 0, "Y": 2, "Z": 1 }
+      },
+      {
+        "text": "Read",
+        "answerClass": "Wrong",
+        "explanation": "Incorrect. you don’t need to see in order to read braille, eyes closed or open, you can still read.",
+        "changePoint": 0,
+        "changeThread": -1,
+        "traitChanges": { "X": -1, "Y": -1, "Z": 0 }
+      }
+    ]
+  }
+]
