@@ -6,3 +6,4 @@
 - Triggered game initialization on start-game and participant confirmation so UI resets cleanly.
 - Added defer attributes to script tags so buttons initialize correctly.
 - Calculated thread length from roundsToWin and roundsWon for consistent gameplay.
+- Configured package.json for Jest with jsdom environment to enable testing of browser scripts.
