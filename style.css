@@ -174,8 +174,32 @@ body {
   visibility: visible;
 }
 
-/* === Screen Transition Effect === */
+/* === Welcome Option Highlight === */
+#welcome-options {
+  list-style: none;
+  margin-top: 1rem;
+}
 
+#welcome-options li {
+  margin: 0.5rem 0;
+  position: relative;
+}
+
+#welcome-options li.selected {
+  color: var(--gold-foil-light);
+}
+
+#welcome-options li.selected::before {
+  content: '\25B6';
+  position: absolute;
+  left: -1.5rem;
+  color: var(--gold-foil-light);
+}
+
+/* === Screen Transition Effect === */
+#app-container {
+  position: relative;
+}
 #app-container::before {
   content: '';
   position: absolute;

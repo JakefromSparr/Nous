@@ -25,7 +25,11 @@ const State = (() => {
     audacity: 0,
     currentCategory: 'Mind, Past',
     difficulty: defaultSettings.difficulty,
-    currentQuestion: null
+    currentQuestion: null,
+    // --- Difficulty tracking ---
+    difficultyLevel: 1,
+    correctAnswersThisDifficulty: 0,
+    answeredQuestionIds: new Set()
   };
 
 const setParticipants = (count) => {
@@ -69,6 +73,9 @@ const setParticipants = (count) => {
     gameState.roundPassed = false;
     gameState.currentCategory = 'Mind, Past';
     gameState.currentQuestion = null;
+    gameState.difficultyLevel = 1;
+    gameState.correctAnswersThisDifficulty = 0;
+    gameState.answeredQuestionIds = new Set();
   };
 
   const getState = () => ({ ...gameState });
@@ -135,13 +142,49 @@ const setParticipants = (count) => {
     gameState.currentCategory = categories[Math.floor(Math.random() * categories.length)];
   };
 
+  const advanceDifficulty = () => {
+    if (gameState.difficultyLevel < 3) {
+      gameState.difficultyLevel++;
+      gameState.correctAnswersThisDifficulty = 0;
+      console.log(`[DIFFICULTY]: Advanced to level ${gameState.difficultyLevel}`);
+    }
+  };
+
   const getNextQuestion = () => {
     if (questionDeck.length === 0) {
       console.warn('[QUESTION]: Deck is empty');
       return null;
     }
-    const idx = Math.floor(Math.random() * questionDeck.length);
-    const q = questionDeck[idx];
+
+    const { difficultyLevel, answeredQuestionIds } = gameState;
+
+    const minId = (difficultyLevel - 1) * 10 + 1;
+    const maxId = difficultyLevel * 10 - 1;
+
+    let available = questionDeck.filter(q =>
+      q.questionId >= minId &&
+      q.questionId <= maxId &&
+      !answeredQuestionIds.has(q.questionId)
+    );
+
+    if (available.length === 0) {
+      advanceDifficulty();
+      const newMin = (gameState.difficultyLevel - 1) * 10 + 1;
+      const newMax = gameState.difficultyLevel * 10 - 1;
+      available = questionDeck.filter(q =>
+        q.questionId >= newMin &&
+        q.questionId <= newMax &&
+        !answeredQuestionIds.has(q.questionId)
+      );
+    }
+
+    if (available.length === 0) {
+      console.warn('[QUESTION]: No available questions for any difficulty.');
+      return null;
+    }
+
+    const idx = Math.floor(Math.random() * available.length);
+    const q = available[idx];
     gameState.currentQuestion = q;
     return q;
   };
@@ -152,6 +195,8 @@ const setParticipants = (count) => {
       console.warn('[EVAL]: No current question');
       return null;
     }
+    // Mark this question as answered
+    gameState.answeredQuestionIds.add(question.questionId);
     const idxMap = { A: 0, B: 1, C: 2 };
     const idx = idxMap[choice] ?? 0;
     const selected = question.answers[idx];
@@ -162,20 +207,23 @@ const setParticipants = (count) => {
       isCorrect = true;
       gameState.roundScore += 2;
       gameState.notWrongCount++;
+      gameState.correctAnswersThisDifficulty++;
     } else if (cls === 'Revelatory') {
       isCorrect = true;
       gameState.roundScore += 1;
       gameState.thread += 1;
       gameState.notWrongCount++;
+      gameState.correctAnswersThisDifficulty++;
     } else {
       gameState.thread -= 1;
     }
 
+    if (gameState.correctAnswersThisDifficulty > 3) {
+      advanceDifficulty();
+    }
+
     if (gameState.notWrongCount >= 3) {
       gameState.roundPassed = true;
-      if (gameState.difficulty === 'standard') {
-        gameState.difficulty = 'advanced';
-      }
     }
 
     return {
