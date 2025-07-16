@@ -136,3 +136,71 @@ body::after {
   width: 100%;
   z-index: 1;
 }
+
+/* === Text Styling === */
+.game-screen {
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.game-screen p,
+.game-screen li {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.game-screen h1,
+.game-screen h2,
+.game-screen h3,
+.game-screen .highlight {
+  background: linear-gradient(to top, var(--gold-foil-dark), var(--gold-foil-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* === Welcome Option Highlight === */
+#welcome-options {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+#welcome-options li {
+  margin: 0.5rem 0;
+  position: relative;
+}
+
+#welcome-options li.selected {
+  color: var(--gold-foil-light);
+}
+
+#welcome-options li.selected::before {
+  content: '\25B6';
+  position: absolute;
+  left: -1.5rem;
+  color: var(--gold-foil-light);
+}
+
+/* === Screen Transition Effect === */
+#app-container {
+  position: relative;
+}
+
+#app-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 100;
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+#app-container.is-transitioning::before {
+  clip-path: circle(75% at 50% 50%);
+  pointer-events: auto;
+}
