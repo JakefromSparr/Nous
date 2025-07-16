@@ -169,6 +169,7 @@ const setParticipants = (count) => {
     loadQuestions,
     getState,
     setState,
+    setParticipants,
     resetGame,
     drawDivination,
     startNewRound,
