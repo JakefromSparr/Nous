@@ -122,14 +122,16 @@ const UI = (() => {
     appContainer.classList.add('is-transitioning');
 
     setTimeout(() => {
+      // Remove active class from all screens
       screens.forEach(screen => {
-        screen.hidden = true;
+        screen.classList.remove('is-active');
         screen.setAttribute('aria-hidden', 'true');
       });
 
+      // Activate the requested screen
       const newScreen = document.querySelector(`[data-screen="${screenName}"]`);
       if (newScreen) {
-        newScreen.hidden = false;
+        newScreen.classList.add('is-active');
         newScreen.setAttribute('aria-hidden', 'false');
       }
 

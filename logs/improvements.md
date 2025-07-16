@@ -20,3 +20,5 @@
 - Reworked layout and welcome screen cursor to eliminate flicker and fix menu navigation.
 - Implemented difficulty-based question selection with tracking of answered cards.
 - Consolidated participant initialization and added external divination deck for smoother restarts.
+- Fixed [hidden] override and pinned controller so screens hide correctly and wood buttons stay visible.
+- Replaced hidden attribute toggling with `.is-active` class for simpler screen control.
