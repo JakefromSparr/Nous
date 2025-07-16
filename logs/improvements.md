@@ -13,3 +13,4 @@
 - Starting new rounds now resets thread and displays updated scores.
 - Weave action consumes thread and randomizes the upcoming category.
 - Enhanced UI with mystical styling and button labels to deepen atmospheric immersion.
+- Fixed round threshold logic so lobby updates only after cutting, enabling proper scoring and life tracking.

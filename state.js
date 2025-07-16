@@ -173,6 +173,9 @@ const setParticipants = (count) => {
 
     if (gameState.notWrongCount >= 3) {
       gameState.roundPassed = true;
+      if (gameState.difficulty === 'standard') {
+        gameState.difficulty = 'advanced';
+      }
     }
 
     return {
