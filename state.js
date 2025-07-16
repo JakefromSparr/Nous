@@ -59,7 +59,8 @@ const setParticipants = (count) => {
     gameState.roundNumber = 1;
     gameState.score = 0;
     gameState.roundScore = 0;
-    gameState.thread = 4; // Can be scaled to round or difficulty later
+    const remainingWins = gameState.roundsToWin - gameState.roundsWon;
+    gameState.thread = remainingWins + 1; // thread = remaining round wins + 1
     gameState.divinations = [];
     gameState.audacity = 0;
     gameState.currentCategory = 'Mind, Past';
