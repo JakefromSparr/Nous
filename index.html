@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nous</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Scripts are deferred to prevent blocking DOM parsing and ensure the DOM is ready before execution. -->
+    <script src="state.js"></script>
+    <script src="ui.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+
+    <!-- Main container for all game screens. Tracks the current state. -->
+    <main id="app-container" data-game-state="welcome">
+
+        <!-- 1. Welcome Screen (Visible by default) -->
+        <section id="screen-welcome" class="game-screen" data-screen="welcome">
+            <h1>Nous: A Game for Connoisseurs</h1>
+            <p>Will what you know save you from what you don’t?</p>
+            <ul id="welcome-options">
+<div id="participant-entry" hidden>
+  <p>How many will be participating in tonight’s experience?</p>
+  <input type="number" id="participant-count" min="1" max="20" value="1" />
+  <button id="confirm-participants">Confirm</button>
+  <p id="participant-flavor" class="flavor-text" hidden></p>
+</div>
+                <li class="selected">Play</li>
+                <li>Rules</li>
+                <li>Options</li>
+            </ul>
+        </section>
+
+        <!-- 2. Rules Screen -->
+        <section id="screen-rules" class="game-screen" data-screen="rules" hidden aria-hidden="true">
+            <h2>Rules</h2>
+            <p>Answer questions to gather Thread. Don't let your Thread run out. Some choices have... consequences.</p>
+        </section>
+
+        <!-- 3. Options Screen -->
+        <section id="screen-options" class="game-screen" data-screen="options" hidden aria-hidden="true">
+            <h2>Options</h2>
+            <label for="difficulty-select">Difficulty:</label>
+            <select id="difficulty-select">
+                <option value="standard">Standard</option>
+                <option value="challenging">Challenging</option>
+                <option value="unsettling">Unsettling</option>
+            </select>
+        </section>
+
+        <!-- 4. Game Lobby Screen -->
+        <section id="screen-game-lobby" class="game-screen" data-screen="game-lobby" hidden aria-hidden="true">
+            <h2>Game Lobby</h2>
+            <div class="lobby-display">
+                <p>Lives Remaining: <span id="lives-display">[#]</span></p>
+                <p>Rounds Remaining: <span id="rounds-display">[#]</span></p>
+                <p>Total Score: <span id="score-display">[#]</span></p>
+            </div>
+            <div id="divinations-display">
+                <h3>Current Divinations</h3>
+                <p>[Divination text will appear here...]</p>
+            </div>
+            <div id="flavor-whispers">
+                <p class="whisper"><em>[The walls are listening...]</em></p>
+            </div>
+        </section>
+
+        <!-- 5. Round Lobby Screen -->
+        <section id="screen-round-lobby" class="game-screen" data-screen="round-lobby" hidden aria-hidden="true">
+            <h2>Round <span id="round-number-display">[#]</span></h2>
+            <div class="round-display">
+                <p>Active Divinations: <span id="active-divinations">[None]</span></p>
+                <p>Current Round Score: <span id="round-score">[#]</span></p>
+                <p>Thread Length Remaining: <span id="thread-display">[#]</span></p>
+                <p>Next Category: <span id="category-hint">[Faded Ink]</span></p>
+            </div>
+        </section>
+
+        <!-- 6. Active Question Screen -->
+        <section id="screen-question" class="game-screen" data-screen="question" hidden aria-hidden="true">
+            <h2 id="question-title">[Question Title/Category]</h2>
+            <p id="question-text">[The trivia question text will be dynamically inserted here.]</p>
+            <div class="answer-options">
+                <p>A: <span id="answer-a">[Answer Option A]</span></p>
+                <p>B: <span id="answer-b">[Answer Option B]</span></p>
+                <p>C: <span id="answer-c">[Answer Option C]</span></p>
+            </div>
+        </section>
+
+        <!-- 7. Result Screen -->
+        <section id="screen-result" class="game-screen" data-screen="result" hidden aria-hidden="true">
+            <h2 id="result-header">[Correct / Incorrect]</h2>
+            <div class="result-details">
+                <p><strong>Question:</strong> <span id="result-question">[Question]</span></p>
+                <p><strong>Your Answer:</strong> <span id="result-chosen-answer">[Chosen Answer]</span></p>
+                <p><strong>Explanation:</strong> <span id="result-explanation">[Explanation text...]</span></p>
+            </div>
+            <div class="result-status">
+                <p><strong>Outcome:</strong> <span id="result-outcome-message">[Thread Gained / Lost]</span></p>
+            </div>
+        </section>
+
+        <!-- 8. Failure Screen -->
+        <section id="screen-failure" class="game-screen" data-screen="failure" hidden aria-hidden="true">
+            <h2>Thread Severed</h2>
+            <p>Points Lost This Round: <span id="lost-points-display">[#]</span></p>
+            <p>The exit was just ‘round that corner… Next time maybe.</p>
+        </section>
+        
+        <!-- 9. Final Reading Screen (Placeholder) -->
+        <section id="screen-final-reading" class="game-screen" data-screen="final-reading" hidden aria-hidden="true">
+            <h2>Final Reading</h2>
+            <p><span id="reading-text">[Your group reading will appear here...]</span></p>
+        </section>
+
+    </main>
+
+    <!-- Persistent button controller -->
+    <div id="controller" data-controller-state="welcome">
+      <button id="btn-1" data-action="">[dynamic]</button>
+      <button id="btn-2" data-action="">[dynamic]</button>
+      <button id="btn-3" data-action="">[dynamic]</button>
+    </div>
+
+    <!-- Hidden dev-only agent log for real-time diagnostics -->
+    <div id="agent-log" hidden>
+        <h4>Agent Notes</h4>
+        <p id="last-change">Last state: <code>welcome</code></p>
+    </div>
+
+</body>
+</html>
