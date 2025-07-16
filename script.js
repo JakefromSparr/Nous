@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('[ACTION]: Pulling divination (placeholder).');
         break;
       case 'next-round':
+        State.startNewRound();
+        UI.updateDisplayValues(State.getState());
         UI.updateScreen('round-lobby');
         break;
 
@@ -96,7 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         break;
       case 'double-points':
-        console.log('[ACTION]: Using 1 Thread to double next points (placeholder).');
+        if (State.spendThreadToWeave()) {
+          State.shuffleNextCategory();
+          UI.updateDisplayValues(State.getState());
+        } else {
+          console.log('[ACTION]: Not enough Thread to weave.');
+        }
         break;
       case 'start-question':
         State.pullThread();
