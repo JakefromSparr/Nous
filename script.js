@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Event Listener ---
   controller.addEventListener('click', (event) => {
-    const action = event.target.dataset.action;
+    const btn = event.target.closest('button');
+    const action = btn?.dataset.action;
     if (action) {
       handleAction(action);
     }

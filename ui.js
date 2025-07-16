@@ -82,6 +82,12 @@ const UI = (() => {
     btn3: document.getElementById('btn-3'),
   };
 
+  const labels = {
+    btn1: buttons.btn1.querySelector('.button-label'),
+    btn2: buttons.btn2.querySelector('.button-label'),
+    btn3: buttons.btn3.querySelector('.button-label'),
+  };
+
   const screens = document.querySelectorAll('.game-screen');
 
   // --- Welcome Screen Option Navigation ---
@@ -133,14 +139,15 @@ const UI = (() => {
 
     ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
       const btn = buttons[id];
+      const label = labels[id];
       const def = config[i];
 
       if (def) {
-        btn.innerText = def.label;
+        if (label) label.innerText = def.label;
         btn.disabled = !!def.disabled;
         btn.setAttribute('data-action', def.action || '');
       } else {
-        btn.innerText = '';
+        if (label) label.innerText = '';
         btn.disabled = true;
         btn.removeAttribute('data-action');
       }

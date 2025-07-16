@@ -12,3 +12,4 @@
 - Fixed round scoring and thread updates to reflect correct answers and round completion.
 - Starting new rounds now resets thread and displays updated scores.
 - Weave action consumes thread and randomizes the upcoming category.
+- Enhanced UI with mystical styling and button labels to deepen atmospheric immersion.

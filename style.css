@@ -1,4 +1,123 @@
-.selected {
-  background: #444;
-  color: #fff;
+/* === CSS Variables & Fonts === */
+:root {
+  --primary-bg: #1a120b;
+  --wood-dark: #3e2b16;
+  --wood-medium: #6f4f2c;
+  --wood-light: #8a6e4d;
+  --text-color: #d9c8a9;
+  --gold-foil-dark: #a88d3d;
+  --gold-foil-light: #f5e4c2;
+  --title-font: 'Cinzel Decorative', serif;
+  --body-font: 'EB Garamond', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  font-family: var(--body-font);
+  overflow: hidden;
+  background-image: url('woodgrain-texture.jpg');
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(255, 165, 0, 0.1) 0%, rgba(26, 18, 11, 0.9) 80%);
+  animation: flicker 10s infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.95; }
+}
+
+#game-screen {
+  background: radial-gradient(circle at center, #050505 0%, #000 80%);
+  border: 4px solid #2b1b0e;
+  box-shadow: inset 0 0 80px #000, 0 0 10px #000;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  min-height: 400px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1;
+}
+
+.gold-text, h1, h2, h3 {
+  font-family: var(--title-font);
+  background: linear-gradient(to top, var(--gold-foil-dark), var(--gold-foil-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.wood-button {
+  background:
+    radial-gradient(ellipse at 30% 70%, transparent 0%, rgba(0,0,0,0.4) 100%),
+    linear-gradient(to right, var(--wood-medium), var(--wood-light) 30%, var(--wood-medium) 70%);
+  border: 4px solid #2b1b0e;
+  border-radius: 50%;
+  width: 140px;
+  height: 140px;
+  font-family: var(--title-font);
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 1rem;
+  cursor: pointer;
+  box-shadow:
+    inset -4px -4px 8px rgba(0,0,0,0.7),
+    0px 5px 15px rgba(0,0,0,0.6);
+  transition: all 0.2s ease-out;
+}
+
+.wood-button:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow:
+    inset -3px -3px 6px rgba(0,0,0,0.6),
+    0px 8px 20px rgba(0,0,0,0.5);
+}
+
+.wood-button:active {
+  transform: translateY(1px) scale(1);
+  box-shadow: inset 4px 4px 8px rgba(0,0,0,0.7), 0px 2px 5px rgba(0,0,0,0.6);
+}
+
+.wood-button .button-label {
+  background: linear-gradient(to top, var(--gold-foil-dark), var(--gold-foil-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  z-index: 1;
 }
