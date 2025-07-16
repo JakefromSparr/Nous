@@ -140,6 +140,7 @@ confirmBtn.addEventListener('click', () => {
   if (count >= 1 && count <= 20) {
     State.setParticipants(count);
     State.initializeGame(count);
+    UI.updateDisplayValues(State.getState());
     flavorLine.textContent = `Strange... it looks like there are ${count + 1} of you here. Ah well.`;
     flavorLine.hidden = false;
     setTimeout(() => {

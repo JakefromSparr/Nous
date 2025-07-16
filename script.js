@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (action) {
       // --- Navigation ---
       case 'start-game':
+        State.initializeGame(State.getState().participants || 1);
+        UI.updateDisplayValues(State.getState());
         UI.showParticipantEntry(); // prompt input
         break;
       case 'go-rules':
