@@ -86,13 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // --- Round Lobby Actions ---
       case 'end-round':
-        console.log('[ACTION]: Ending round (placeholder).');
-        UI.updateScreen('game-lobby');
+        const success = State.cutThread();
+        UI.updateDisplayValues(State.getState());
+        if (success) {
+          UI.updateScreen('game-lobby');
+        } else {
+          UI.showFailure(State.getState().roundScore);
+          UI.updateScreen('failure');
+        }
         break;
       case 'double-points':
         console.log('[ACTION]: Using 1 Thread to double next points (placeholder).');
         break;
       case 'start-question':
+        State.pullThread();
+        UI.updateDisplayValues(State.getState());
         const q = State.getNextQuestion();
         if (q) {
           UI.showQuestion({
@@ -118,7 +126,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // --- Post Result Actions ---
       case 'accept-result':
-        UI.updateScreen('round-lobby');
+        UI.updateDisplayValues(State.getState());
+        if (State.getState().roundPassed) {
+          UI.updateScreen('game-lobby');
+        } else if (State.getState().thread <= 0) {
+          UI.showFailure(State.getState().roundScore);
+          State.endRound(false);
+          UI.updateScreen('failure');
+        } else {
+          UI.updateScreen('round-lobby');
+        }
         break;
       case 'challenge-result':
         console.log('[ACTION]: Disagree triggered — increment Audacity (placeholder).');
