@@ -22,3 +22,4 @@
 - Consolidated participant initialization and added external divination deck for smoother restarts.
 - Fixed [hidden] override and pinned controller so screens hide correctly and wood buttons stay visible.
 - Replaced hidden attribute toggling with `.is-active` class for simpler screen control.
+- Fixed Play button not advancing to participant entry by stripping arrow from welcome option text.

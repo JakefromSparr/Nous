@@ -115,7 +115,12 @@ const UI = (() => {
     updateWelcomeHighlight();
   };
 
-  const getWelcomeSelection = () => welcomeOptions[welcomeIndex]?.textContent.trim();
+  const getWelcomeSelection = () => {
+    const li = welcomeOptions[welcomeIndex];
+    if (!li) return '';
+    // Remove any leading symbols (like the static arrow) before returning
+    return li.textContent.replace(/^\s*[^A-Za-z0-9]*/, '').trim();
+  };
 
   const updateScreen = (screenName) => {
     // Trigger "inky black" transition
