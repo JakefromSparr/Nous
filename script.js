@@ -135,9 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // --- Post Result Actions ---
       case 'accept-result':
         UI.updateDisplayValues(State.getState());
-        if (State.getState().roundPassed) {
-          UI.updateScreen('game-lobby');
-        } else if (State.getState().thread <= 0) {
+        if (State.getState().thread <= 0) {
           UI.showFailure(State.getState().roundScore);
           State.endRound(false);
           UI.updateScreen('failure');
