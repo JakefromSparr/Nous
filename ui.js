@@ -6,7 +6,8 @@ const validActions = new Set([
   'answer-a', 'answer-b', 'answer-c',
   'challenge-result', 'accept-result', 'return-to-lobby',
   'restart-game', 'save-reading', 'quit-game',
-  'welcome-up', 'welcome-down', 'welcome-select'
+  'welcome-up', 'welcome-down', 'welcome-select',
+  'participants-up', 'participants-confirm', 'participants-down'
 ]);
 
 // === Button Configurations by Screen === //
@@ -25,6 +26,11 @@ const buttonConfigs = {
     { label: "Back", action: "back-to-welcome" },
     null,
     null
+  ],
+  participants: [
+    { label: "More", action: "participants-up" },
+    { label: "Confirm", action: "participants-confirm" },
+    { label: "Less", action: "participants-down" }
   ],
   "game-lobby": [
     { label: "Turn Back", action: "save-and-quit" },
@@ -154,34 +160,40 @@ const UI = (() => {
     });
   };
 // Inside the UI IIFE
-const participantEntry = document.getElementById('participant-entry');
-const participantInput = document.getElementById('participant-count');
-const confirmBtn = document.getElementById('confirm-participants');
+const participantCountDisplay = document.getElementById('participant-count-display');
 const flavorLine = document.getElementById('participant-flavor');
+let participantCount = 1;
+
+const updateParticipantDisplay = () => {
+  participantCountDisplay.textContent = participantCount;
+};
 
 const showParticipantEntry = () => {
-  participantEntry.hidden = false;
+  participantCount = 1;
   flavorLine.hidden = true;
+  updateParticipantDisplay();
+  updateScreen('participants');
 };
 
-const hideParticipantEntry = () => {
-  participantEntry.hidden = true;
+const adjustParticipantCount = (delta) => {
+  participantCount = Math.min(20, Math.max(1, participantCount + delta));
+  updateParticipantDisplay();
 };
 
-confirmBtn.addEventListener('click', () => {
-  const count = parseInt(participantInput.value);
-  if (count >= 1 && count <= 20) {
-    State.setParticipants(count);
-    State.initializeGame(count);
+const getParticipantCount = () => participantCount;
+
+const confirmParticipants = () => {
+  const count = participantCount;
+  State.setParticipants(count);
+  State.initializeGame(count);
+  UI.updateDisplayValues(State.getState());
+  flavorLine.textContent = `Strange... it looks like there are ${count + 1} of you here. Ah well.`;
+  flavorLine.hidden = false;
+  setTimeout(() => {
+    UI.updateScreen('game-lobby');
     UI.updateDisplayValues(State.getState());
-    flavorLine.textContent = `Strange... it looks like there are ${count + 1} of you here. Ah well.`;
-    flavorLine.hidden = false;
-    setTimeout(() => {
-      UI.updateScreen('game-lobby');
-      UI.updateDisplayValues(State.getState());
-    }, 2000);
-  }
-});
+  }, 2000);
+};
 
   const updateDisplayValues = (data) => {
     if ('lives' in data) {
@@ -239,7 +251,9 @@ confirmBtn.addEventListener('click', () => {
     showResult,
     showFailure,
     showParticipantEntry,
-    hideParticipantEntry,
+    adjustParticipantCount,
+    getParticipantCount,
+    confirmParticipants,
     moveWelcomeSelection,
     getWelcomeSelection
   };
