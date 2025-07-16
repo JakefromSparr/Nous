@@ -29,7 +29,6 @@ const State = (() => {
 const setParticipants = (count) => {
   gameState.participants = count;
   gameState.lives = count + 1;
-  gameState.rounds = 3; // wins required to finish
 };
 
   // --- Stubs for Game Data ---
@@ -86,7 +85,8 @@ const setParticipants = (count) => {
   const startNewRound = () => {
     gameState.roundNumber++;
     gameState.roundScore = 0;
-    gameState.thread = gameState.rounds + 1; // thread = remaining round wins + 1
+    const remainingWins = gameState.roundsToWin - gameState.roundsWon;
+    gameState.thread = remainingWins + 1; // thread = remaining round wins + 1
   };
 
   const endRound = (won = false) => {
