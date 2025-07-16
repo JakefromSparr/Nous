@@ -32,19 +32,19 @@ const State = (() => {
     answeredQuestionIds: new Set()
   };
 
-const setParticipants = (count) => {
-  gameState.participants = count;
-  gameState.lives = count + 1;
-};
-
-  // --- Stubs for Game Data ---
-  const divinationDeck = [
-    "A choice made in haste will ripple outwards.",
-    "Doubt is a shadow that you cast yourself.",
-    "The path of least resistance leads to the steepest fall."
-  ];
-
+  // --- Game Data ---
+  let divinationDeck = [];
   let questionDeck = [];
+
+  const loadDivinations = async () => {
+    try {
+      const response = await fetch('divinations/divinations.json');
+      if (!response.ok) throw new Error('Failed to load divinations');
+      divinationDeck = await response.json();
+    } catch (err) {
+      console.error('[LOAD DIVINATIONS]', err);
+    }
+  };
 
   const loadQuestions = async () => {
     try {
@@ -59,6 +59,7 @@ const setParticipants = (count) => {
   // --- Public Methods ---
 
   const initializeGame = (participantCount = 1) => {
+    gameState.participants = participantCount;
     gameState.lives = participantCount + 1;
     gameState.roundsToWin = defaultSettings.roundsToWin;
     gameState.roundsWon = 0;
@@ -254,9 +255,9 @@ const setParticipants = (count) => {
   return {
     initializeGame,
     loadQuestions,
+    loadDivinations,
     getState,
     setState,
-    setParticipants,
     resetGame,
     drawDivination,
     startNewRound,
