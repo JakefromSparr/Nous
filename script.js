@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Game Initialization ---
   async function init() {
     await State.loadQuestions();
+    await State.loadDivinations();
     UI.updateScreen('welcome');
     console.log('[INIT]: Nous initialized. Welcome.');
   }
@@ -47,8 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       }
       case 'start-game':
-        State.initializeGame(State.getState().participants || 1);
-        UI.updateDisplayValues(State.getState());
         UI.showParticipantEntry();
         break;
       case 'participants-up':
@@ -57,9 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'participants-down':
         UI.adjustParticipantCount(-1);
         break;
-      case 'participants-confirm':
-        UI.confirmParticipants();
+      case 'participants-confirm': {
+        const count = UI.confirmParticipants();
+        State.initializeGame(count);
+        UI.updateDisplayValues(State.getState());
+        setTimeout(() => {
+          UI.updateScreen('game-lobby');
+          UI.updateDisplayValues(State.getState());
+        }, 2000);
         break;
+      }
       case 'go-rules':
         UI.updateScreen('rules');
         break;

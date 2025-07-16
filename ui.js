@@ -192,15 +192,9 @@ const getParticipantCount = () => participantCount;
 
 const confirmParticipants = () => {
   const count = participantCount;
-  State.setParticipants(count);
-  State.initializeGame(count);
-  UI.updateDisplayValues(State.getState());
   flavorLine.textContent = `Strange... it looks like there are ${count + 1} of you here. Ah well.`;
   flavorLine.hidden = false;
-  setTimeout(() => {
-    UI.updateScreen('game-lobby');
-    UI.updateDisplayValues(State.getState());
-  }, 2000);
+  return count;
 };
 
   const updateDisplayValues = (data) => {
