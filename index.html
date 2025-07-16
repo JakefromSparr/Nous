@@ -20,7 +20,7 @@
     <main id="app-container" data-game-state="welcome">
 
         <!-- 1. Welcome Screen (Visible by default) -->
-        <section id="screen-welcome" class="game-screen" data-screen="welcome">
+        <section id="screen-welcome" class="game-screen is-active" data-screen="welcome">
             <h1>NOUS</h1>
             <h2 class="subtitle">A GAME FOR CONNOISSEURS</h2>
             <p>Will what you know save you from what you don’t?</p>
@@ -40,7 +40,7 @@
         </section>
 
         <!-- 1b. Participant Select Screen -->
-        <section id="screen-participants" class="game-screen" data-screen="participants" hidden aria-hidden="true">
+        <section id="screen-participants" class="game-screen" data-screen="participants">
             <h2>Waiting Room</h2>
             <p>How many will be participating tonight?</p>
             <p id="participant-count-display">1</p>
@@ -48,13 +48,13 @@
         </section>
 
         <!-- 2. Rules Screen -->
-        <section id="screen-rules" class="game-screen" data-screen="rules" hidden aria-hidden="true">
+        <section id="screen-rules" class="game-screen" data-screen="rules">
             <h2>Rules</h2>
             <p>Answer questions to gather Thread. Don't let your Thread run out. Some choices have... consequences.</p>
         </section>
 
         <!-- 3. Options Screen -->
-        <section id="screen-options" class="game-screen" data-screen="options" hidden aria-hidden="true">
+        <section id="screen-options" class="game-screen" data-screen="options">
             <h2>Options</h2>
             <label for="difficulty-select">Difficulty:</label>
             <select id="difficulty-select">
@@ -65,7 +65,7 @@
         </section>
 
         <!-- 4. Game Lobby Screen -->
-        <section id="screen-game-lobby" class="game-screen" data-screen="game-lobby" hidden aria-hidden="true">
+        <section id="screen-game-lobby" class="game-screen" data-screen="game-lobby">
             <h2>Game Lobby</h2>
             <div class="lobby-display">
                 <p>Lives Remaining: <span id="lives-display">[#]</span></p>
@@ -82,7 +82,7 @@
         </section>
 
         <!-- 5. Round Lobby Screen -->
-        <section id="screen-round-lobby" class="game-screen" data-screen="round-lobby" hidden aria-hidden="true">
+        <section id="screen-round-lobby" class="game-screen" data-screen="round-lobby">
             <h2>Round <span id="round-number-display">[#]</span></h2>
             <div class="round-display">
                 <p>Active Divinations: <span id="active-divinations">[None]</span></p>
@@ -93,7 +93,7 @@
         </section>
 
         <!-- 6. Active Question Screen -->
-        <section id="screen-question" class="game-screen" data-screen="question" hidden aria-hidden="true">
+        <section id="screen-question" class="game-screen" data-screen="question">
             <h2 id="question-title">[Question Title/Category]</h2>
             <p id="question-text">[The trivia question text will be dynamically inserted here.]</p>
             <div class="answer-options">
@@ -104,7 +104,7 @@
         </section>
 
         <!-- 7. Result Screen -->
-        <section id="screen-result" class="game-screen" data-screen="result" hidden aria-hidden="true">
+        <section id="screen-result" class="game-screen" data-screen="result">
             <h2 id="result-header">[Correct / Incorrect]</h2>
             <div class="result-details">
                 <p><strong>Question:</strong> <span id="result-question">[Question]</span></p>
@@ -117,14 +117,14 @@
         </section>
 
         <!-- 8. Failure Screen -->
-        <section id="screen-failure" class="game-screen" data-screen="failure" hidden aria-hidden="true">
+        <section id="screen-failure" class="game-screen" data-screen="failure">
             <h2>Thread Severed</h2>
             <p>Points Lost This Round: <span id="lost-points-display">[#]</span></p>
             <p>The exit was just ‘round that corner… Next time maybe.</p>
         </section>
         
         <!-- 9. Final Reading Screen (Placeholder) -->
-        <section id="screen-final-reading" class="game-screen" data-screen="final-reading" hidden aria-hidden="true">
+        <section id="screen-final-reading" class="game-screen" data-screen="final-reading">
             <h2>Final Reading</h2>
             <p><span id="reading-text">[Your group reading will appear here...]</span></p>
         </section>
