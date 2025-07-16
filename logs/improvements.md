@@ -15,3 +15,4 @@
 - Enhanced UI with mystical styling and button labels to deepen atmospheric immersion.
 - Fixed round threshold logic so lobby updates only after cutting, enabling proper scoring and life tracking.
 - Added waiting room screen with button-based participant selection to streamline game start.
+- Centered main screen with updated flex layout so buttons sit neatly below for better focus.
