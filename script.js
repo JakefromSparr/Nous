@@ -49,7 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'start-game':
         State.initializeGame(State.getState().participants || 1);
         UI.updateDisplayValues(State.getState());
-        UI.showParticipantEntry(); // prompt input
+        UI.showParticipantEntry();
+        break;
+      case 'participants-up':
+        UI.adjustParticipantCount(1);
+        break;
+      case 'participants-down':
+        UI.adjustParticipantCount(-1);
+        break;
+      case 'participants-confirm':
+        UI.confirmParticipants();
         break;
       case 'go-rules':
         UI.updateScreen('rules');

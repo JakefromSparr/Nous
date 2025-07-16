@@ -24,16 +24,18 @@
             <h1>Nous: A Game for Connoisseurs</h1>
             <p>Will what you know save you from what you don’t?</p>
             <ul id="welcome-options">
-<div id="participant-entry" hidden>
-  <p>How many will be participating in tonight’s experience?</p>
-  <input type="number" id="participant-count" min="1" max="20" value="1" />
-  <button id="confirm-participants">Confirm</button>
-  <p id="participant-flavor" class="flavor-text" hidden></p>
-</div>
                 <li class="selected">Play</li>
                 <li>Rules</li>
                 <li>Options</li>
             </ul>
+        </section>
+
+        <!-- 1b. Participant Select Screen -->
+        <section id="screen-participants" class="game-screen" data-screen="participants" hidden aria-hidden="true">
+            <h2>Waiting Room</h2>
+            <p>How many will be participating tonight?</p>
+            <p id="participant-count-display">1</p>
+            <p id="participant-flavor" class="flavor-text" hidden></p>
         </section>
 
         <!-- 2. Rules Screen -->
