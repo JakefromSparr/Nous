@@ -1,8 +1,7 @@
- * The main engine and controller for the Nous game.
- * - Initializes the game.
- * - Listens for user input from the controller.
- * - Coordinates actions between the State and UI modules.
- */
+// The main engine and controller for the Nous game.
+// Initializes the game.
+// Listens for user input from the controller.
+// Coordinates actions between the State and UI modules.
 
 document.addEventListener('DOMContentLoaded', () => {
   const controller = document.getElementById('controller');
