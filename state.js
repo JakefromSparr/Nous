@@ -19,6 +19,8 @@ const State = (() => {
     roundNumber: 1,
     roundScore: 0,
     thread: 0,              // Set per round
+    notWrongCount: 0,
+    roundPassed: false,
     divinations: [],
     audacity: 0,
     currentCategory: 'Mind, Past',
@@ -63,6 +65,8 @@ const setParticipants = (count) => {
     gameState.thread = remainingWins + 1; // thread = remaining round wins + 1
     gameState.divinations = [];
     gameState.audacity = 0;
+    gameState.notWrongCount = 0;
+    gameState.roundPassed = false;
     gameState.currentCategory = 'Mind, Past';
     gameState.currentQuestion = null;
   };
@@ -88,6 +92,8 @@ const setParticipants = (count) => {
     gameState.roundScore = 0;
     const remainingWins = gameState.roundsToWin - gameState.roundsWon;
     gameState.thread = remainingWins + 1; // thread = remaining round wins + 1
+    gameState.notWrongCount = 0;
+    gameState.roundPassed = false;
   };
 
   const endRound = (won = false) => {
@@ -98,6 +104,8 @@ const setParticipants = (count) => {
       gameState.lives--;
     }
     gameState.roundScore = 0;
+    gameState.notWrongCount = 0;
+    gameState.roundPassed = false;
   };
 
   const spendThreadToWeave = () => {
@@ -106,6 +114,19 @@ const setParticipants = (count) => {
       return true;
     }
     return false;
+  };
+
+  const pullThread = () => {
+    gameState.thread--;
+  };
+
+  const cutThread = () => {
+    const success = gameState.thread > 0;
+    endRound(success);
+    if (!success) {
+      loseRoundPoints();
+    }
+    return success;
   };
 
   const shuffleNextCategory = () => {
@@ -133,13 +154,26 @@ const setParticipants = (count) => {
     const idxMap = { A: 0, B: 1, C: 2 };
     const idx = idxMap[choice] ?? 0;
     const selected = question.answers[idx];
-    const isCorrect = selected.answerClass !== 'Wrong';
+    const cls = selected.answerClass;
 
-    if (isCorrect) {
-      gameState.roundScore += 10;
+    let isCorrect = false;
+    if (cls === 'Typical') {
+      isCorrect = true;
+      gameState.roundScore += 2;
+      gameState.notWrongCount++;
+    } else if (cls === 'Revelatory') {
+      isCorrect = true;
+      gameState.roundScore += 1;
+      gameState.thread += 1;
+      gameState.notWrongCount++;
     } else {
-      gameState.thread--;
+      gameState.thread -= 1;
     }
+
+    if (gameState.notWrongCount >= 3) {
+      gameState.roundPassed = true;
+    }
+
     return {
       correct: isCorrect,
       question: question.text,
@@ -176,6 +210,8 @@ const setParticipants = (count) => {
     startNewRound,
     endRound,
     spendThreadToWeave,
+    pullThread,
+    cutThread,
     shuffleNextCategory,
     getNextQuestion,
     evaluateAnswer,
