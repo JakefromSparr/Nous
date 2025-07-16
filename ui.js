@@ -150,14 +150,31 @@ confirmBtn.addEventListener('click', () => {
 });
 
   const updateDisplayValues = (data) => {
-    if ('lives' in data) document.getElementById('lives-display').textContent = data.lives;
-    if ('rounds' in data) document.getElementById('rounds-display').textContent = data.rounds;
-    if ('score' in data) document.getElementById('score-display').textContent = data.score;
-    if ('thread' in data) document.getElementById('thread-display').textContent = data.thread;
-    if ('roundScore' in data) document.getElementById('round-score').textContent = data.roundScore;
-    if ('roundNumber' in data) document.getElementById('round-number-display').textContent = data.roundNumber;
-    if ('category' in data) document.getElementById('category-hint').textContent = data.category;
-    if ('divinations' in data) document.getElementById('active-divinations').textContent = data.divinations.join(', ');
+    if ('lives' in data) {
+      document.getElementById('lives-display').textContent = data.lives;
+    }
+    if ('roundsToWin' in data && 'roundsWon' in data) {
+      const remaining = data.roundsToWin - data.roundsWon;
+      document.getElementById('rounds-display').textContent = remaining;
+    }
+    if ('score' in data) {
+      document.getElementById('score-display').textContent = data.score;
+    }
+    if ('thread' in data) {
+      document.getElementById('thread-display').textContent = data.thread;
+    }
+    if ('roundScore' in data) {
+      document.getElementById('round-score').textContent = data.roundScore;
+    }
+    if ('roundNumber' in data) {
+      document.getElementById('round-number-display').textContent = data.roundNumber;
+    }
+    if ('currentCategory' in data) {
+      document.getElementById('category-hint').textContent = data.currentCategory;
+    }
+    if ('divinations' in data) {
+      document.getElementById('active-divinations').textContent = data.divinations.join(', ');
+    }
   };
 
   const showQuestion = (q) => {
