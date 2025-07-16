@@ -48,7 +48,13 @@ body::after {
   50% { opacity: 0.95; }
 }
 
-#game-screen {
+#app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-screen {
   background: radial-gradient(circle at center, #050505 0%, #000 80%);
   border: 4px solid #2b1b0e;
   box-shadow: inset 0 0 80px #000, 0 0 10px #000;
@@ -119,5 +125,14 @@ body::after {
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
+  z-index: 1;
+}
+
+#controller {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
   z-index: 1;
 }
