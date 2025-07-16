@@ -7,3 +7,4 @@
 - Added defer attributes to script tags so buttons initialize correctly.
 - Calculated thread length from roundsToWin and roundsWon for consistent gameplay.
 - Configured package.json for Jest with jsdom environment to enable testing of browser scripts.
+- Implemented button-controlled menu navigation on the welcome screen so Up/Select/Down cycle choices and selecting Play prompts participant entry.

@@ -5,15 +5,16 @@ const validActions = new Set([
   'end-round', 'double-points', 'start-question',
   'answer-a', 'answer-b', 'answer-c',
   'challenge-result', 'accept-result', 'return-to-lobby',
-  'restart-game', 'save-reading', 'quit-game'
+  'restart-game', 'save-reading', 'quit-game',
+  'welcome-up', 'welcome-down', 'welcome-select'
 ]);
 
 // === Button Configurations by Screen === //
 const buttonConfigs = {
   welcome: [
-    { label: "Select", action: "start-game" },
-    { label: "Rules", action: "go-rules" },
-    { label: "Options", action: "go-options" }
+    { label: "Up", action: "welcome-up" },
+    { label: "Select", action: "welcome-select" },
+    { label: "Down", action: "welcome-down" }
   ],
   rules: [
     { label: "Back", action: "back-to-welcome" },
@@ -83,6 +84,27 @@ const UI = (() => {
 
   const screens = document.querySelectorAll('.game-screen');
 
+  // --- Welcome Screen Option Navigation ---
+  const welcomeOptions = Array.from(document.querySelectorAll('#welcome-options li'));
+  let welcomeIndex = 0;
+
+  const updateWelcomeHighlight = () => {
+    welcomeOptions.forEach((li, idx) => {
+      li.classList.toggle('selected', idx === welcomeIndex);
+    });
+  };
+
+  const moveWelcomeSelection = (dir) => {
+    if (dir === 'up') {
+      welcomeIndex = (welcomeIndex - 1 + welcomeOptions.length) % welcomeOptions.length;
+    } else if (dir === 'down') {
+      welcomeIndex = (welcomeIndex + 1) % welcomeOptions.length;
+    }
+    updateWelcomeHighlight();
+  };
+
+  const getWelcomeSelection = () => welcomeOptions[welcomeIndex]?.textContent.trim();
+
   const updateScreen = (screenName) => {
     screens.forEach(screen => {
       screen.hidden = true;
@@ -100,6 +122,10 @@ const UI = (() => {
     if (agentLog) agentLog.textContent = `Last state: ${screenName}`;
 
     configureButtons(screenName);
+
+    if (screenName === 'welcome') {
+      updateWelcomeHighlight();
+    }
   };
 
   const configureButtons = (screenName) => {
@@ -204,6 +230,10 @@ confirmBtn.addEventListener('click', () => {
     updateDisplayValues,
     showQuestion,
     showResult,
-    showFailure
+    showFailure,
+    showParticipantEntry,
+    hideParticipantEntry,
+    moveWelcomeSelection,
+    getWelcomeSelection
   };
 })();

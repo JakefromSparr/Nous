@@ -28,6 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     switch (action) {
       // --- Navigation ---
+      case 'welcome-up':
+        UI.moveWelcomeSelection('up');
+        break;
+      case 'welcome-down':
+        UI.moveWelcomeSelection('down');
+        break;
+      case 'welcome-select': {
+        const choice = UI.getWelcomeSelection();
+        if (choice === 'Play') {
+          handleAction('start-game');
+        } else if (choice === 'Rules') {
+          handleAction('go-rules');
+        } else if (choice === 'Options') {
+          handleAction('go-options');
+        }
+        break;
+      }
       case 'start-game':
         State.initializeGame(State.getState().participants || 1);
         UI.updateDisplayValues(State.getState());
