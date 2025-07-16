@@ -17,4 +17,5 @@
 - Added waiting room screen with button-based participant selection to streamline game start.
 - Centered main screen with updated flex layout so buttons sit neatly below for better focus.
 - Added menu highlight and transition overlay to clarify selections.
+- Reworked layout and welcome screen cursor to eliminate flicker and fix menu navigation.
 - Implemented difficulty-based question selection with tracking of answered cards.

@@ -153,15 +153,15 @@ const UI = (() => {
 
     ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
       const btn = buttons[id];
-      const label = labels[id];
+      const labelSpan = btn.querySelector('.button-label');
       const def = config[i];
 
-      if (def) {
-        if (label) label.innerText = def.label;
+      if (def && labelSpan) {
+        labelSpan.innerText = def.label;
         btn.disabled = !!def.disabled;
         btn.setAttribute('data-action', def.action || '');
-      } else {
-        if (label) label.innerText = '';
+      } else if (labelSpan) {
+        labelSpan.innerText = '';
         btn.disabled = true;
         btn.removeAttribute('data-action');
       }
