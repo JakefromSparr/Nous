@@ -26,3 +26,4 @@
 - Introduced Fate Card system with new data file and state logic for immersive dynamics.
 - Restored thread and category functions so pull/cut/weave buttons operate again.
 - Adjusted cut thread to end a round without loss so players can escape safely.
+- Implemented fate card display and lobby updates for active effects.

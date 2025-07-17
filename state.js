@@ -25,6 +25,7 @@ const State = (() => {
     answeredQuestionIds: new Set(),
     completedFateCardIds: new Set(),
     activeRoundEffects: [],
+    currentFateCard: null,
     currentQuestion: null,
     notWrongCount: 0,
     currentCategory: 'Mind, Past',
@@ -66,6 +67,7 @@ const State = (() => {
         answeredQuestionIds: new Set(),
         completedFateCardIds: new Set(),
         activeRoundEffects: [],
+        currentFateCard: null,
         currentQuestion: null,
         notWrongCount: 0,
         currentCategory: 'Mind, Past',
@@ -79,6 +81,7 @@ const State = (() => {
     gameState.thread = gameState.roundsToWin - gameState.roundsWon + 1;
     gameState.notWrongCount = 0;
     gameState.activeRoundEffects = [];
+    gameState.currentFateCard = null;
     gameState.currentCategory = 'Mind, Past';
   };
 
@@ -144,14 +147,31 @@ const State = (() => {
     return availableCards[idx];
   };
 
-  const applyFateCardEffect = (effect) => {
+  const setCurrentFateCard = (card) => {
+    gameState.currentFateCard = card;
+  };
+
+  const getCurrentFateCard = () => gameState.currentFateCard;
+
+  const chooseFateOption = (index) => {
+    const card = gameState.currentFateCard;
+    if (!card) return null;
+    const choice = card.choices[index];
+    if (!choice) return null;
+    const flavor = applyFateCardEffect({ ...choice.effect }, card.title);
+    gameState.completedFateCardIds.add(card.id);
+    gameState.currentFateCard = null;
+    return flavor;
+  };
+
+  const applyFateCardEffect = (effect, title = '') => {
     if (!effect) return null;
 
     if (effect.type === 'IMMEDIATE_SCORE') {
         gameState.score += effect.value;
     } else {
         // Any other effect is considered a round-long effect
-        gameState.activeRoundEffects.push(effect);
+        gameState.activeRoundEffects.push({ ...effect, cardTitle: title });
     }
     return effect.flavorText || null;
   };
@@ -291,6 +311,9 @@ const State = (() => {
     getState: () => ({ ...gameState }),
     drawFateCard,
     applyFateCardEffect,
+    setCurrentFateCard,
+    getCurrentFateCard,
+    chooseFateOption,
     drawDivination,
     getNextQuestion,
     evaluateAnswer,

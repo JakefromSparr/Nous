@@ -93,7 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('[ACTION]: Save and quit (placeholder).');
         break;
       case 'pull-divination':
-        console.log('[ACTION]: Pulling divination (placeholder).');
+        const card = State.drawFateCard();
+        if (card) {
+          State.setCurrentFateCard(card);
+          UI.showFateCard(card);
+          UI.updateScreen('fate-card');
+        } else {
+          console.log('[ACTION]: No fate cards available');
+        }
         break;
       case 'next-round':
         State.startNewRound();
@@ -145,6 +152,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const letter = action.split('-')[1].toUpperCase();
         evaluateAnswer(letter);
         break;
+
+      case 'fate-a':
+      case 'fate-b':
+      case 'fate-c': {
+        const idxMap = { 'fate-a': 0, 'fate-b': 1, 'fate-c': 2 };
+        const flavor = State.chooseFateOption(idxMap[action]);
+        UI.showFateResult(flavor);
+        UI.updateDisplayValues(State.getState());
+        UI.updateScreen('game-lobby');
+        break;
+      }
 
       // --- Post Result Actions ---
       case 'accept-result':
