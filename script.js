@@ -46,6 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.removeEventListener('keydown', onWelcomeKeyDown);
   }
 
+  // Automatically persist progress when the page unloads
+  window.addEventListener('beforeunload', () => {
+    State.saveGame();
+  });
+
   // --- Central Action Handler ---
   function handleAction(action) {
     console.log(`[ACTION]: ${action}`);

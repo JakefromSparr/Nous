@@ -4,7 +4,8 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "install": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
   },
   "jest": {
     "testEnvironment": "jsdom"
+  },
+  "dependencies": {
+    "zod": "^4.0.5"
   }
 }

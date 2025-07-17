@@ -27,3 +27,5 @@ Distribution, duplication, or derivative work without permission is strictly pro
 
 > *Nous is watching. Tread lightly.*
 
+Game state JSON is validated using Zod; see `validator.js` for details.
+
