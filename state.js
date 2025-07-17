@@ -15,7 +15,7 @@ const State = (() => {
     { id: "DYN001", type: 'DYN', text: "Whispers of Doubt: The next 'Wrong' answer costs an extra Thread." },
     { id: "DYN002", type: 'DYN', text: "Sudden Clarity: The first 'Revelatory' answer this round awards bonus points." },
     { id: "DYN003", type: 'DYN', text: "Shared Burden: If the Thread frays, all players feel the chill." },
-    { id: "DYN004", type: 'DYN', text: "Scholar's Boon: Your knowledge protects you. Gain +1 Thread at the start of this round." }
+    { id: "DYN005", type: 'DYN', text: "Scholar's Boon: Your knowledge protects you. Gain +1 Thread at the start of this round." }
   ];
   let fateCardDeck = [];
   let divinationDeck = [];
@@ -106,7 +106,7 @@ const State = (() => {
 
     // Activate any pending fate card for this round
     gameState.activeFateCard = gameState.pendingFateCard;
-    if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN004') {
+    if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN005') {
       gameState.thread++; // Scholar's Boon immediate effect
     }
     gameState.pendingFateCard = null;

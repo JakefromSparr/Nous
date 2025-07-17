@@ -30,3 +30,4 @@
 - Randomized answer order per question to keep players guessing.
 - Integrated fate card effects with switch logic so drawn cards alter the next round.
 - Loaded external fate-cards.json and preserved round points when escaping.
+- Aligned fate card IDs between defaults and external file for consistent behavior when loading fails.
