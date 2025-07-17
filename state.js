@@ -27,6 +27,7 @@ const State = (() => {
     activeRoundEffects: [],
     currentFateCard: null,
     currentQuestion: null,
+    currentAnswers: [],
     notWrongCount: 0,
     currentCategory: 'Mind, Past',
     divinations: []
@@ -69,6 +70,7 @@ const State = (() => {
         activeRoundEffects: [],
         currentFateCard: null,
         currentQuestion: null,
+        currentAnswers: [],
         notWrongCount: 0,
         currentCategory: 'Mind, Past',
         divinations: []
@@ -83,6 +85,7 @@ const State = (() => {
     gameState.activeRoundEffects = [];
     gameState.currentFateCard = null;
     gameState.currentCategory = 'Mind, Past';
+    gameState.currentAnswers = [];
   };
 
   const endRound = (outcome = 'lose') => {
@@ -182,6 +185,13 @@ const State = (() => {
     console.log("Resolving round effects...", gameState.activeRoundEffects);
   };
 
+  const shuffleArray = (arr) => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  };
+
 
   // --- Question Logic ---
   const getNextQuestion = () => {
@@ -220,7 +230,9 @@ const State = (() => {
     const idx = Math.floor(Math.random() * available.length);
     const q = available[idx];
     gameState.currentQuestion = q;
-    return q;
+    gameState.currentAnswers = q.answers.slice();
+    shuffleArray(gameState.currentAnswers);
+    return { ...q, answers: gameState.currentAnswers };
   };
 
   const evaluateAnswer = (choice) => {
@@ -243,7 +255,7 @@ const State = (() => {
     gameState.answeredQuestionIds.add(question.questionId);
     const idxMap = { A: 0, B: 1, C: 2 };
     const idx = idxMap[choice] ?? 0;
-    const selected = question.answers[idx];
+    const selected = gameState.currentAnswers[idx];
     const cls = selected.answerClass;
 
     let isCorrect = false;
