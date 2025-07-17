@@ -82,14 +82,20 @@ const State = (() => {
     gameState.currentCategory = 'Mind, Past';
   };
 
-  const endRound = (won = false) => {
+  const endRound = (outcome = 'lose') => {
     resolveRoundEffects(); // Resolve fate card effects first
 
-    if (won) {
+    switch (outcome) {
+      case 'win':
         gameState.roundsWon++;
         gameState.score += gameState.roundScore;
-    } else {
+        break;
+      case 'lose':
         gameState.lives--;
+        break;
+      case 'escape':
+        gameState.roundScore = 0;
+        break;
     }
     // ... rest of endRound logic
   };
@@ -107,12 +113,8 @@ const State = (() => {
   };
 
   const cutThread = () => {
-    const success = gameState.notWrongCount >= 3 && gameState.thread > 0;
-    endRound(success);
-    if (!success) {
-      loseRoundPoints();
-    }
-    return success;
+    endRound('escape');
+    return true;
   };
 
   const shuffleNextCategory = () => {
