@@ -7,8 +7,8 @@ const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
 
-  // A complete, combined, and shuffled Fate Deck used when tempting fate
-  const fateDeck = [
+  // Basic fallback Fate Deck in case the external file fails to load
+  const defaultFateDeck = [
     { id: "DIV001", type: 'DIV', text: "A choice made in haste will ripple outwards." },
     { id: "DIV002", type: 'DIV', text: "Doubt is a shadow that you cast yourself." },
     { id: "DIV003", type: 'DIV', text: "The path of least resistance leads to the steepest fall." },
@@ -17,6 +17,7 @@ const State = (() => {
     { id: "DYN003", type: 'DYN', text: "Shared Burden: If the Thread frays, all players feel the chill." },
     { id: "DYN004", type: 'DYN', text: "Scholar's Boon: Your knowledge protects you. Gain +1 Thread at the start of this round." }
   ];
+  let fateCardDeck = [];
   let divinationDeck = [];
 
   // --- Game State ---
@@ -48,16 +49,20 @@ const State = (() => {
   // --- Data Loading ---
   const loadData = async () => {
     try {
-      const [questionsRes, divinationsRes] = await Promise.all([
+      const [questionsRes, fateCardsRes, divinationsRes] = await Promise.all([
         fetch('questions/questions.json'),
+        fetch('fate-cards.json'),
         fetch('divinations/divinations.json')
       ]);
       if (!questionsRes.ok) throw new Error('Failed to load questions');
+      if (!fateCardsRes.ok) throw new Error('Failed to load fate cards');
       if (!divinationsRes.ok) throw new Error('Failed to load divinations');
       questionDeck = await questionsRes.json();
+      fateCardDeck = await fateCardsRes.json();
       divinationDeck = await divinationsRes.json();
     } catch (err) {
       console.error('[LOAD DATA]', err);
+      fateCardDeck = [];
     }
   };
 
@@ -119,6 +124,7 @@ const State = (() => {
         gameState.lives--;
         break;
       case 'escape':
+        gameState.score += gameState.roundScore;
         gameState.roundScore = 0;
         break;
     }
@@ -162,7 +168,8 @@ const State = (() => {
       console.log('[FATE]: A fate is already pending.');
       return null;
     }
-    const drawn = fateDeck[Math.floor(Math.random() * fateDeck.length)];
+    const deck = fateCardDeck.length ? fateCardDeck : defaultFateDeck;
+    const drawn = deck[Math.floor(Math.random() * deck.length)];
     gameState.pendingFateCard = drawn;
     return drawn;
   };
