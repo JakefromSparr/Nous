@@ -87,6 +87,7 @@ const UI = (() => {
   const appContainer = document.getElementById('app-container');
   const controller = document.getElementById('controller');
   const agentLog = document.getElementById('last-change');
+  const ariaStatus = document.getElementById('aria-status');
 
   const buttons = {
     btn1: document.getElementById('btn-1'),
@@ -110,6 +111,7 @@ const UI = (() => {
     welcomeOptions.forEach((li, idx) => {
       li.classList.toggle('selected', idx === welcomeIndex);
     });
+    if (ariaStatus) ariaStatus.textContent = getWelcomeSelection();
   };
 
   const moveWelcomeSelection = (dir) => {
@@ -149,6 +151,7 @@ const UI = (() => {
       appContainer.setAttribute('data-game-state', screenName);
       controller.setAttribute('data-controller-state', screenName);
       if (agentLog) agentLog.textContent = `Last state: ${screenName}`;
+      if (ariaStatus) ariaStatus.textContent = screenName.replace('-', ' ');
 
       configureButtons(screenName);
 

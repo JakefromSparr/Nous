@@ -32,4 +32,5 @@
 - Loaded external fate-cards.json and preserved round points when escaping.
 - Expanded fate mechanics with predictions, modifiers, tallies, and power-ups for richer round outcomes.
 - Aligned fate card IDs between defaults and external file for consistent behavior when loading fails.
+- Added keyboard controls, aria live region, localStorage saves and basic smoke test for stable flow.
 - Fixed object spread typos and removed duplicate if block; replaced missing wood texture with gradient to prevent load errors.
