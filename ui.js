@@ -7,7 +7,8 @@ const validActions = new Set([
   'challenge-result', 'accept-result', 'return-to-lobby',
   'restart-game', 'save-reading', 'quit-game',
   'welcome-up', 'welcome-down', 'welcome-select',
-  'participants-up', 'participants-confirm', 'participants-down'
+  'participants-up', 'participants-confirm', 'participants-down',
+  'fate-a', 'fate-b', 'fate-c'
 ]);
 
 // === Button Configurations by Screen === //
@@ -46,6 +47,11 @@ const buttonConfigs = {
     { label: "Choose A", action: "answer-a" },
     { label: "Choose B", action: "answer-b" },
     { label: "Choose C", action: "answer-c" }
+  ],
+  "fate-card": [
+    { label: "Choose A", action: "fate-a" },
+    { label: "Choose B", action: "fate-b" },
+    { label: "Choose C", action: "fate-c" }
   ],
   result: [
     { label: "Disagree", action: "challenge-result" },
@@ -230,6 +236,11 @@ const confirmParticipants = () => {
     if ('divinations' in data) {
       document.getElementById('active-divinations').textContent = data.divinations.join(', ');
     }
+    if ('activeRoundEffects' in data) {
+      const container = document.querySelector('#divinations-display p');
+      const titles = data.activeRoundEffects.map(e => e.cardTitle).filter(Boolean);
+      container.textContent = titles.length ? titles.join(', ') : '[None]';
+    }
   };
 
   const showQuestion = (q) => {
@@ -238,6 +249,17 @@ const confirmParticipants = () => {
     document.getElementById('answer-a').textContent = q.choices.A;
     document.getElementById('answer-b').textContent = q.choices.B;
     document.getElementById('answer-c').textContent = q.choices.C;
+  };
+
+  const showFateCard = (card) => {
+    document.getElementById('fate-card-title').textContent = card.title;
+    document.getElementById('fate-card-text').textContent = card.text;
+    const a = card.choices[0]?.label || '';
+    const b = card.choices[1]?.label || '';
+    const c = card.choices[2]?.label || '';
+    document.getElementById('fate-a-text').textContent = a;
+    document.getElementById('fate-b-text').textContent = b;
+    document.getElementById('fate-c-text').textContent = c;
   };
 
   const showResult = (res) => {
@@ -266,6 +288,7 @@ const confirmParticipants = () => {
     showQuestion,
     showResult,
     showFailure,
+    showFateCard,
     showFateResult,
     showParticipantEntry,
     adjustParticipantCount,

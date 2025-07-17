@@ -35,7 +35,6 @@
               <p>How many will be participating in tonight’s experience?</p>
               <input type="number" id="participant-count" min="1" max="20" value="1" />
               <button id="confirm-participants">Confirm</button>
-              <p id="participant-flavor" class="flavor-text" hidden></p>
             </div>
         </section>
 
@@ -100,6 +99,17 @@
                 <p>A: <span id="answer-a">[Answer Option A]</span></p>
                 <p>B: <span id="answer-b">[Answer Option B]</span></p>
                 <p>C: <span id="answer-c">[Answer Option C]</span></p>
+            </div>
+        </section>
+
+        <!-- 6b. Fate Card Screen -->
+        <section id="screen-fate-card" class="game-screen" data-screen="fate-card">
+            <h2 id="fate-card-title">[Fate Title]</h2>
+            <p id="fate-card-text">[The whisper of destiny will appear here.]</p>
+            <div class="answer-options">
+                <p>A: <span id="fate-a-text">[Option A]</span></p>
+                <p>B: <span id="fate-b-text">[Option B]</span></p>
+                <p>C: <span id="fate-c-text">[Option C]</span></p>
             </div>
         </section>
 
