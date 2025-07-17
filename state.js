@@ -112,10 +112,13 @@ const State = (() => {
 
     // Activate any pending fate card for this round
     gameState.activeFateCard = gameState.pendingFateCard;
-    if (gameState.activeFateCard &&
-        (gameState.activeFateCard.id === 'DYN005' || gameState.activeFateCard.id === 'DYN004')) {
-    if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN005') {
-      gameState.thread++; // Scholar's Boon immediate effect
+    if (
+      gameState.activeFateCard &&
+      (gameState.activeFateCard.id === 'DYN005' || gameState.activeFateCard.id === 'DYN004')
+    ) {
+      if (gameState.activeFateCard.id === 'DYN005') {
+        gameState.thread++; // Scholar's Boon immediate effect
+      }
     }
     gameState.pendingFateCard = null;
   };
@@ -414,6 +417,29 @@ const State = (() => {
 
   const isOutOfLives = () => gameState.lives <= 0;
 
+  const saveGame = () => {
+    try {
+      localStorage.setItem('nous-save', JSON.stringify(gameState));
+      return true;
+    } catch (err) {
+      console.error('[SAVE]', err);
+      return false;
+    }
+  };
+
+  const loadGame = () => {
+    try {
+      const data = localStorage.getItem('nous-save');
+      if (!data) return false;
+      const saved = JSON.parse(data);
+      gameState = { ...gameState, ...saved };
+      return true;
+    } catch (err) {
+      console.error('[LOAD]', err);
+      return false;
+    }
+  };
+
   // --- Public Interface ---
   return {
     loadData,
@@ -437,6 +463,7 @@ const State = (() => {
     loseRoundPoints,
     hasWonGame,
     isOutOfLives,
-    // ... other functions you need to export
+    saveGame,
+    loadGame
   };
 })();

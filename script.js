@@ -9,8 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Game Initialization ---
   async function init() {
     await State.loadData();
-    UI.updateScreen('welcome');
-    console.log('[INIT]: Nous initialized. Welcome.');
+    const resumed = State.loadGame();
+    if (resumed) {
+      UI.updateDisplayValues(State.getState());
+      UI.updateScreen(State.getState().currentScreen || 'game-lobby');
+    } else {
+      UI.updateScreen('welcome');
+    }
+    console.log('[INIT]: Nous initialized.');
   }
 
   // --- Event Listener ---
@@ -19,6 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const action = btn?.dataset.action;
     if (action) {
       handleAction(action);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const state = document.getElementById('app-container').dataset.gameState;
+    if (state === 'welcome') {
+      if (event.key === 'ArrowUp') handleAction('welcome-up');
+      else if (event.key === 'ArrowDown') handleAction('welcome-down');
+      else if (event.key === 'Enter') handleAction('welcome-select');
     }
   });
 
@@ -90,7 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // --- Game Lobby Actions ---
       case 'save-and-quit':
-        console.log('[ACTION]: Save and quit (placeholder).');
+        State.saveGame();
+        UI.updateScreen('welcome');
         break;
       case 'pull-divination':
         const card = State.drawFateCard();
@@ -193,4 +209,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Start the Game ---
   init();
+  window.handleAction = handleAction;
 });
