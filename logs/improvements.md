@@ -25,3 +25,4 @@
 - Fixed Play button not advancing to participant entry by stripping arrow from welcome option text.
 - Introduced Fate Card system with new data file and state logic for immersive dynamics.
 - Restored thread and category functions so pull/cut/weave buttons operate again.
+- Adjusted cut thread to end a round without loss so players can escape safely.
