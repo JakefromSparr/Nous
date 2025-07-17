@@ -24,3 +24,4 @@
 - Replaced hidden attribute toggling with `.is-active` class for simpler screen control.
 - Fixed Play button not advancing to participant entry by stripping arrow from welcome option text.
 - Introduced Fate Card system with new data file and state logic for immersive dynamics.
+- Restored thread and category functions so pull/cut/weave buttons operate again.

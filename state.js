@@ -7,6 +7,7 @@ const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
   let fateCardDeck = [];
+  let divinationDeck = [];
 
   // --- Game State ---
   let gameState = {
@@ -25,20 +26,25 @@ const State = (() => {
     completedFateCardIds: new Set(),
     activeRoundEffects: [],
     currentQuestion: null,
-    notWrongCount: 0
+    notWrongCount: 0,
+    currentCategory: 'Mind, Past',
+    divinations: []
   };
 
   // --- Data Loading ---
   const loadData = async () => {
     try {
-      const [questionsRes, fateCardsRes] = await Promise.all([
+      const [questionsRes, fateCardsRes, divinationsRes] = await Promise.all([
         fetch('questions/questions.json'),
-        fetch('fate-cards.json')
+        fetch('fate-cards.json'),
+        fetch('divinations/divinations.json')
       ]);
       if (!questionsRes.ok) throw new Error('Failed to load questions');
       if (!fateCardsRes.ok) throw new Error('Failed to load fate cards');
+      if (!divinationsRes.ok) throw new Error('Failed to load divinations');
       questionDeck = await questionsRes.json();
       fateCardDeck = await fateCardsRes.json();
+      divinationDeck = await divinationsRes.json();
     } catch (err) {
       console.error('[LOAD DATA]', err);
     }
@@ -61,7 +67,9 @@ const State = (() => {
         completedFateCardIds: new Set(),
         activeRoundEffects: [],
         currentQuestion: null,
-        notWrongCount: 0
+        notWrongCount: 0,
+        currentCategory: 'Mind, Past',
+        divinations: []
     };
   };
 
@@ -71,6 +79,7 @@ const State = (() => {
     gameState.thread = gameState.roundsToWin - gameState.roundsWon + 1;
     gameState.notWrongCount = 0;
     gameState.activeRoundEffects = [];
+    gameState.currentCategory = 'Mind, Past';
   };
 
   const endRound = (won = false) => {
@@ -83,6 +92,40 @@ const State = (() => {
         gameState.lives--;
     }
     // ... rest of endRound logic
+  };
+
+  const spendThreadToWeave = () => {
+    if (gameState.thread > 0) {
+      gameState.thread--;
+      return true;
+    }
+    return false;
+  };
+
+  const pullThread = () => {
+    gameState.thread--;
+  };
+
+  const cutThread = () => {
+    const success = gameState.notWrongCount >= 3 && gameState.thread > 0;
+    endRound(success);
+    if (!success) {
+      loseRoundPoints();
+    }
+    return success;
+  };
+
+  const shuffleNextCategory = () => {
+    const categories = ['Mind, Present', 'Body, Future', 'Soul, Past'];
+    gameState.currentCategory = categories[Math.floor(Math.random() * categories.length)];
+  };
+
+  const advanceDifficulty = () => {
+    if (gameState.difficultyLevel < 3) {
+      gameState.difficultyLevel++;
+      gameState.correctAnswersThisDifficulty = 0;
+      console.log(`[DIFFICULTY]: Advanced to level ${gameState.difficultyLevel}`);
+    }
   };
 
 
@@ -120,23 +163,118 @@ const State = (() => {
 
   // --- Question Logic ---
   const getNextQuestion = () => {
-    // ... (Your existing getNextQuestion logic)
-    return null; // Placeholder
+    if (questionDeck.length === 0) {
+      console.warn('[QUESTION]: Deck is empty');
+      return null;
+    }
+
+    const { difficultyLevel, answeredQuestionIds } = gameState;
+
+    const minId = (difficultyLevel - 1) * 10 + 1;
+    const maxId = difficultyLevel * 10 - 1;
+
+    let available = questionDeck.filter(q =>
+      q.questionId >= minId &&
+      q.questionId <= maxId &&
+      !answeredQuestionIds.has(q.questionId)
+    );
+
+    if (available.length === 0) {
+      advanceDifficulty();
+      const newMin = (gameState.difficultyLevel - 1) * 10 + 1;
+      const newMax = gameState.difficultyLevel * 10 - 1;
+      available = questionDeck.filter(q =>
+        q.questionId >= newMin &&
+        q.questionId <= newMax &&
+        !answeredQuestionIds.has(q.questionId)
+      );
+    }
+
+    if (available.length === 0) {
+      console.warn('[QUESTION]: No available questions for any difficulty.');
+      return null;
+    }
+
+    const idx = Math.floor(Math.random() * available.length);
+    const q = available[idx];
+    gameState.currentQuestion = q;
+    return q;
   };
 
   const evaluateAnswer = (choice) => {
     // Check for active wager effects
     gameState.activeRoundEffects.forEach(effect => {
-        if (effect.type === 'APPLY_WAGER' && `answer-${choice.toLowerCase()}` === effect.target) {
-            if (effect.reward.type === 'SCORE') {
-                gameState.score += effect.reward.value;
-            }
+      if (effect.type === 'APPLY_WAGER' && `answer-${choice.toLowerCase()}` === effect.target) {
+        if (effect.reward.type === 'SCORE') {
+          gameState.score += effect.reward.value;
         }
+      }
     });
 
-    // ... (Your existing evaluateAnswer logic)
-    return null; // Placeholder
+    const question = gameState.currentQuestion;
+    if (!question) {
+      console.warn('[EVAL]: No current question');
+      return null;
+    }
+
+    // Mark this question as answered
+    gameState.answeredQuestionIds.add(question.questionId);
+    const idxMap = { A: 0, B: 1, C: 2 };
+    const idx = idxMap[choice] ?? 0;
+    const selected = question.answers[idx];
+    const cls = selected.answerClass;
+
+    let isCorrect = false;
+    if (cls === 'Typical') {
+      isCorrect = true;
+      gameState.roundScore += 2;
+      gameState.notWrongCount++;
+      gameState.correctAnswersThisDifficulty++;
+    } else if (cls === 'Revelatory') {
+      isCorrect = true;
+      gameState.roundScore += 1;
+      gameState.thread += 1;
+      gameState.notWrongCount++;
+      gameState.correctAnswersThisDifficulty++;
+    } else {
+      gameState.thread -= 1;
+    }
+
+    if (gameState.correctAnswersThisDifficulty > 3) {
+      advanceDifficulty();
+    }
+
+    if (gameState.notWrongCount >= 3) {
+      gameState.roundPassed = true;
+    }
+
+    return {
+      correct: isCorrect,
+      question: question.text,
+      answer: selected.text,
+      explanation: selected.explanation,
+      outcomeText: isCorrect ? 'The thread holds.' : 'The thread frays.'
+    };
   };
+
+  const incrementAudacity = () => {
+    gameState.audacity++;
+  };
+
+  const loseRoundPoints = () => {
+    gameState.roundScore = 0;
+  };
+
+  const drawDivination = () => {
+    if (divinationDeck.length === 0) return null;
+    const line = divinationDeck[Math.floor(Math.random() * divinationDeck.length)];
+    gameState.divinations.push(line);
+    return line;
+  };
+
+  const hasWonGame = () => gameState.roundsWon >= gameState.roundsToWin;
+
+  const isOutOfLives = () => gameState.lives <= 0;
 
   // --- Public Interface ---
   return {
@@ -144,11 +282,20 @@ const State = (() => {
     initializeGame,
     startNewRound,
     endRound,
+    spendThreadToWeave,
+    pullThread,
+    cutThread,
+    shuffleNextCategory,
     getState: () => ({ ...gameState }),
     drawFateCard,
     applyFateCardEffect,
+    drawDivination,
     getNextQuestion,
-    evaluateAnswer
+    evaluateAnswer,
+    incrementAudacity,
+    loseRoundPoints,
+    hasWonGame,
+    isOutOfLives,
     // ... other functions you need to export
   };
 })();
