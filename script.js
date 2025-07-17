@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       UI.updateScreen(State.getState().currentScreen || 'game-lobby');
     } else {
       UI.updateScreen('welcome');
+      attachWelcomeKeys();
     }
     console.log('[INIT]: Nous initialized.');
   }
@@ -28,14 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.addEventListener('keydown', (event) => {
-    const state = document.getElementById('app-container').dataset.gameState;
-    if (state === 'welcome') {
-      if (event.key === 'ArrowUp') handleAction('welcome-up');
-      else if (event.key === 'ArrowDown') handleAction('welcome-down');
-      else if (event.key === 'Enter') handleAction('welcome-select');
+  function onWelcomeKeyDown(event) {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'Enter') {
+      event.preventDefault();
     }
-  });
+    if (event.key === 'ArrowUp') handleAction('welcome-up');
+    else if (event.key === 'ArrowDown') handleAction('welcome-down');
+    else if (event.key === 'Enter') handleAction('welcome-select');
+  }
+
+  function attachWelcomeKeys() {
+    document.addEventListener('keydown', onWelcomeKeyDown);
+  }
+
+  function detachWelcomeKeys() {
+    document.removeEventListener('keydown', onWelcomeKeyDown);
+  }
 
   // --- Central Action Handler ---
   function handleAction(action) {
@@ -62,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       }
       case 'start-game':
+        detachWelcomeKeys();
         UI.showParticipantEntry();
         break;
       case 'participants-up':
@@ -88,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'back-to-welcome':
         UI.updateScreen('welcome');
+        attachWelcomeKeys();
         break;
       case 'return-to-lobby':
         UI.updateScreen('game-lobby');
@@ -95,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'restart-game':
         console.log('[ACTION]: Restarting game (placeholder).');
         UI.updateScreen('welcome');
+        attachWelcomeKeys();
         break;
       case 'quit-game':
         console.log('[ACTION]: Quit game (placeholder).');
@@ -107,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'save-and-quit':
         State.saveGame();
         UI.updateScreen('welcome');
+        attachWelcomeKeys();
         break;
       case 'pull-divination':
         const card = State.drawFateCard();
