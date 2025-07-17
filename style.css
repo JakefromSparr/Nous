@@ -102,6 +102,13 @@ body {
   box-shadow: inset 4px 4px 8px rgba(0,0,0,0.7), 0px 2px 5px rgba(0,0,0,0.6);
 }
 
+.wood-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--gold-foil-dark),
+    0 0 10px var(--gold-foil-light);
+}
+
 .wood-button .button-label {
   background: linear-gradient(to top, var(--gold-foil-dark), var(--gold-foil-light));
   -webkit-background-clip: text;
@@ -219,13 +226,13 @@ body {
   height: 100%;
   background-color: #000;
   z-index: 100;
-  clip-path: circle(0% at 50% 50%);
+  clip-path: circle(0 at 50% 50%);
   transition: clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
 #app-container.is-transitioning::before {
-  clip-path: circle(75% at 50% 50%);
+  clip-path: circle(calc(max(100vw, 100vh)) at 50% 50%);
   pointer-events: auto;
 }
 
@@ -240,4 +247,15 @@ body {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  #app-container {
+    align-items: flex-start;
+    padding-top: 1rem;
+  }
+
+  #controller {
+    bottom: 0.5rem;
+  }
 }

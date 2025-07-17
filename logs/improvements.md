@@ -36,3 +36,5 @@
 - Fixed object spread typos and removed duplicate if block; replaced missing wood texture with gradient to prevent load errors.
 - Added beforeunload save and basic zod validation for safe reloads.
 - Fixed syntax error in State and skipped Playwright downloads for smoother CI
+- Improved mobile layout with media query and dynamic transition radius; detached welcome key listeners so arrows no longer scroll mid-game.
+
