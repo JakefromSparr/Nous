@@ -28,3 +28,4 @@
 - Adjusted cut thread to end a round without loss so players can escape safely.
 - Implemented fate card display and lobby updates for active effects.
 - Randomized answer order per question to keep players guessing.
+- Integrated fate card effects with switch logic so drawn cards alter the next round.
