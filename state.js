@@ -112,8 +112,6 @@ const State = (() => {
 
     // Activate any pending fate card for this round
     gameState.activeFateCard = gameState.pendingFateCard;
-    if (gameState.activeFateCard &&
-        (gameState.activeFateCard.id === 'DYN005' || gameState.activeFateCard.id === 'DYN004')) {
     if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN005') {
       gameState.thread++; // Scholar's Boon immediate effect
     }
