@@ -252,6 +252,13 @@ const confirmParticipants = () => {
     document.getElementById('lost-points-display').textContent = pointsLost;
   };
 
+  const showFateResult = (flavorText) => {
+    if (flavorText) {
+      alert(flavorText);
+      console.log(`[FATE RESULT]: ${flavorText}`);
+    }
+  };
+
   return {
     updateScreen,
     configureButtons,
@@ -259,6 +266,7 @@ const confirmParticipants = () => {
     showQuestion,
     showResult,
     showFailure,
+    showFateResult,
     showParticipantEntry,
     adjustParticipantCount,
     getParticipantCount,
