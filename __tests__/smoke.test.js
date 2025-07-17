@@ -45,6 +45,7 @@ describe('basic playthrough', () => {
     };
     inject(fs.readFileSync(path.join(__dirname, '../state.js'), 'utf8'));
     inject(fs.readFileSync(path.join(__dirname, '../ui.js'), 'utf8'));
+    inject(fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8'));
     inject(fs.readFileSync(path.join(__dirname, '../script.js'), 'utf8'));
     wnd.document.dispatchEvent(new wnd.Event('DOMContentLoaded'));
     jest.runAllTimers();

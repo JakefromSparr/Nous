@@ -45,10 +45,10 @@ const State = (() => {
     currentCategory: 'Mind, Past',
     divinations: [],
     roundAnswerTally: { A: 0, B: 0, C: 0 },
-    activePowerUps: []
+    activePowerUps: [],
+    answeredThisRound: []
   };
 
-  // --- Data Loading ---
   const loadData = async () => {
     try {
       const [questionsRes, fateCardsRes, divinationsRes] = await Promise.all([
@@ -106,6 +106,7 @@ const State = (() => {
     gameState.activeRoundEffects = [];
     gameState.roundAnswerTally = { A: 0, B: 0, C: 0 };
     gameState.activePowerUps = [];
+    gameState.answeredThisRound = [];
     gameState.currentFateCard = null;
     gameState.currentCategory = 'Mind, Past';
     gameState.currentAnswers = [];
@@ -409,6 +410,15 @@ const State = (() => {
     gameState.roundScore = 0;
   };
 
+  const recordAnswer = (qid, letter) => {
+    gameState.answeredThisRound.push({ qid, letter });
+  };
+
+  const resetRound = () => {
+    gameState.answeredThisRound = [];
+    gameState.activeRoundEffects = [];
+  };
+
   const drawDivination = () => {
     if (divinationDeck.length === 0) return null;
     const line = divinationDeck[Math.floor(Math.random() * divinationDeck.length)];
@@ -467,6 +477,8 @@ const State = (() => {
     hasWonGame,
     isOutOfLives,
     saveGame,
-    loadGame
+    loadGame,
+    recordAnswer,
+    resetRound,
   };
 })();

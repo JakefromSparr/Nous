@@ -38,3 +38,4 @@
 - Fixed syntax error in State and skipped Playwright downloads for smoother CI
 - Improved mobile layout with media query and dynamic transition radius; detached welcome key listeners so arrows no longer scroll mid-game.
 
+- Refactored fate system into new module with schema validation; added UI hooks and tests for dynamic cards.

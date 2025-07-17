@@ -127,13 +127,15 @@ document.addEventListener('DOMContentLoaded', () => {
         attachWelcomeKeys();
         break;
       case 'pull-divination':
-        const card = State.drawFateCard();
+        if (typeof Fate === 'undefined') break;
+        const card = Fate.draw();
         if (card) {
-          State.setCurrentFateCard(card);
-          UI.showFateCard(card);
+          UI.showFate(card);
+          UI.setButtonLabels(Fate.getButtonLabels());
+          ['btn-1','btn-2','btn-3'].forEach((id,i)=>{
+            document.getElementById(id).onclick = () => Fate.choose(i);
+          });
           UI.updateScreen('fate-card');
-        } else {
-          console.log('[ACTION]: No fate cards available');
         }
         break;
       case 'next-round':
@@ -146,6 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'end-round':
         const success = State.cutThread();
         UI.updateDisplayValues(State.getState());
+        if (typeof Fate !== 'undefined') {
+          const tally = { A: 0, B: 0, C: 0 };
+          State.getState().answeredThisRound.forEach(r => { tally[r.letter] = (tally[r.letter] || 0) + 1; });
+          Fate.resolveRound(tally, success);
+          State.resetRound();
+        }
         if (success) {
           UI.updateScreen('game-lobby');
         } else {
@@ -218,6 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Answer Evaluation ---
   function evaluateAnswer(letter) {
+    const qid = State.getState().currentQuestion?.questionId;
+    if (qid) State.recordAnswer(qid, letter);
     const result = State.evaluateAnswer(letter);
     if (result) {
       UI.showResult(result);

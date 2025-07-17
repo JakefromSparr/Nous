@@ -22,7 +22,8 @@
           "reward": { "type": "SCORE", "value": 1 },
           "flavorText": "You let the moth spiral towards the flame. You feel a strange connection to its fate, tied to your future choices."
         }
-      }
+      },
+      { "label": "Ignore" }
     ]
   },
   {
@@ -61,9 +62,9 @@
     "rarity": "Uncommon",
     "tags": ["Gamble", "Consequence", "Pact"],
     "text": "You accept the Tallyman's Gambit. Each time you answer 'C' this round, a tally is marked. The final count will determine your fate.",
-    "choices": [
-      { "label": "Accept", "effect": { "type": "TALLY_ANSWERS", "target": "C" } }
-    ],
+      "choices": [
+        { "label": "Accept", "effect": { "type": "TALLY_TABLE", "target": "C", "table": { "0": { "type": "DOUBLE_ROUND_SCORE" } } } }
+      ],
     "duration": "round",
     "resolveAt": "endOfRound"
   },

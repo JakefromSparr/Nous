@@ -183,6 +183,15 @@ const UI = (() => {
       }
     });
   };
+
+  const setButtonLabels = (arr) => {
+    ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
+      const btn = buttons[id];
+      const label = arr[i] || '';
+      btn.querySelector('.button-label').innerText = label;
+      btn.disabled = label === '';
+    });
+  };
 // Inside the UI IIFE
 const participantCountDisplay = document.getElementById('participant-count-display');
 const flavorLine = document.getElementById('participant-flavor');
@@ -265,6 +274,10 @@ const confirmParticipants = () => {
     document.getElementById('fate-c-text').textContent = c;
   };
 
+  const showFate = (card) => {
+    showFateCard(card);
+  };
+
   const showResult = (res) => {
     document.getElementById('result-header').textContent = res.correct ? "Correct" : "Incorrect";
     document.getElementById('result-question').textContent = res.question;
@@ -289,8 +302,10 @@ const confirmParticipants = () => {
     configureButtons,
     updateDisplayValues,
     showQuestion,
+    setButtonLabels,
     showResult,
     showFailure,
+    showFate,
     showFateCard,
     showFateResult,
     showParticipantEntry,

@@ -1,9 +1,8 @@
 const { z } = require('zod');
 
 const Effect = z.object({
-  type: z.literal('IMMEDIATE_SCORE'),
-  value: z.number()
-});
+  type: z.string()
+}).catchall(z.any());
 
 const Choice = z.object({
   label: z.string(),
@@ -14,7 +13,7 @@ const FateCard = z.object({
   id: z.string(),
   title: z.string(),
   text: z.string(),
-  choices: z.array(Choice)
+  choices: z.array(Choice).max(3)
 });
 
 module.exports = { Effect, Choice, FateCard };
