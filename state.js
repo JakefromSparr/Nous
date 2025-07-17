@@ -43,7 +43,9 @@ const State = (() => {
     currentAnswers: [],
     notWrongCount: 0,
     currentCategory: 'Mind, Past',
-    divinations: []
+    divinations: [],
+    roundAnswerTally: { A: 0, B: 0, C: 0 },
+    activePowerUps: []
   };
 
   // --- Data Loading ---
@@ -89,7 +91,9 @@ const State = (() => {
         currentAnswers: [],
         notWrongCount: 0,
         currentCategory: 'Mind, Past',
-        divinations: []
+        divinations: [],
+        roundAnswerTally: { A: 0, B: 0, C: 0 },
+        activePowerUps: []
     };
   };
 
@@ -100,12 +104,16 @@ const State = (() => {
     gameState.thread = remainingWins + 1;
     gameState.notWrongCount = 0;
     gameState.activeRoundEffects = [];
+    gameState.roundAnswerTally = { A: 0, B: 0, C: 0 };
+    gameState.activePowerUps = [];
     gameState.currentFateCard = null;
     gameState.currentCategory = 'Mind, Past';
     gameState.currentAnswers = [];
 
     // Activate any pending fate card for this round
     gameState.activeFateCard = gameState.pendingFateCard;
+    if (gameState.activeFateCard &&
+        (gameState.activeFateCard.id === 'DYN005' || gameState.activeFateCard.id === 'DYN004')) {
     if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN005') {
       gameState.thread++; // Scholar's Boon immediate effect
     }
@@ -194,19 +202,57 @@ const State = (() => {
   const applyFateCardEffect = (effect, title = '') => {
     if (!effect) return null;
 
-    if (effect.type === 'IMMEDIATE_SCORE') {
+    switch (effect.type) {
+      case 'IMMEDIATE_SCORE':
         gameState.score += effect.value;
-    } else {
+        break;
+      case 'SCORE':
+        gameState.roundScore += effect.value;
+        break;
+      case 'POWER_UP':
+        gameState.activePowerUps.push(effect.power);
+        break;
+      default:
         // Any other effect is considered a round-long effect
-        gameState.activeRoundEffects.push({ ...effect, cardTitle: title });
+        gameState.activeRoundEffects.push({ ...effect, cardTitle: title, count: 0 });
+        break;
     }
     return effect.flavorText || null;
   };
   
   const resolveRoundEffects = () => {
-    // This function will be expanded as we add more complex cards
-    // For now, it's a placeholder for the logic in the Tallyman's Gambit, etc.
-    console.log("Resolving round effects...", gameState.activeRoundEffects);
+    gameState.activeRoundEffects.forEach(effect => {
+      switch (effect.type) {
+        case 'ROUND_PREDICTION': {
+          const tally = gameState.roundAnswerTally;
+          const max = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
+          if (max && max[1] > 0 && max[0] === effect.prediction) {
+            if (effect.reward) {
+              if (effect.reward.type === 'DOUBLE_ROUND_SCORE') {
+                gameState.roundScore *= 2;
+              } else if (effect.reward.type === 'SCORE') {
+                gameState.score += effect.reward.value;
+              }
+            }
+          }
+          break;
+        }
+        case 'ROUND_MODIFIER':
+          if (effect.reward && gameState.thread > 0) {
+            if (effect.reward.type === 'SCORE') {
+              gameState.score += effect.reward.value;
+            }
+          }
+          break;
+        case 'TALLY_ANSWERS':
+          if (effect.count && effect.count > 0) {
+            gameState.score += effect.count;
+          }
+          break;
+      }
+    });
+    gameState.activeRoundEffects = [];
+    gameState.roundAnswerTally = { A: 0, B: 0, C: 0 };
   };
 
   const shuffleArray = (arr) => {
@@ -256,16 +302,27 @@ const State = (() => {
     gameState.currentQuestion = q;
     gameState.currentAnswers = q.answers.slice();
     shuffleArray(gameState.currentAnswers);
+
+    if (gameState.activePowerUps.includes('REMOVE_WRONG_ANSWER')) {
+      const wrongIdx = gameState.currentAnswers.findIndex(a => a.answerClass === 'Wrong');
+      if (wrongIdx !== -1) {
+        gameState.currentAnswers.splice(wrongIdx, 1);
+      }
+      gameState.activePowerUps = gameState.activePowerUps.filter(p => p !== 'REMOVE_WRONG_ANSWER');
+    }
     return { ...q, answers: gameState.currentAnswers };
   };
 
   const evaluateAnswer = (choice) => {
-    // Check for active wager effects
+    gameState.roundAnswerTally[choice] = (gameState.roundAnswerTally[choice] || 0) + 1;
+    // Check for active wager or tally effects
     gameState.activeRoundEffects.forEach(effect => {
       if (effect.type === 'APPLY_WAGER' && `answer-${choice.toLowerCase()}` === effect.target) {
         if (effect.reward.type === 'SCORE') {
           gameState.score += effect.reward.value;
         }
+      } else if (effect.type === 'TALLY_ANSWERS' && choice.toUpperCase() === effect.target.toUpperCase()) {
+        effect.count = (effect.count || 0) + 1;
       }
     });
 
