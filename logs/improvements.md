@@ -34,3 +34,5 @@
 - Aligned fate card IDs between defaults and external file for consistent behavior when loading fails.
 - Added keyboard controls, aria live region, localStorage saves and basic smoke test for stable flow.
 - Fixed object spread typos and removed duplicate if block; replaced missing wood texture with gradient to prevent load errors.
+- Added beforeunload save and basic zod validation for safe reloads.
+- Fixed syntax error in State and skipped Playwright downloads for smoother CI

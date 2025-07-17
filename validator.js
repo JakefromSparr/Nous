@@ -1,0 +1,35 @@
+const { z } = require('zod');
+
+const gameStateSchema = z.object({
+  currentScreen: z.string(),
+  lives: z.number(),
+  score: z.number(),
+  roundsToWin: z.number(),
+  roundsWon: z.number(),
+  roundNumber: z.number(),
+  roundScore: z.number(),
+  thread: z.number(),
+  audacity: z.number(),
+  difficultyLevel: z.number(),
+  correctAnswersThisDifficulty: z.number(),
+  answeredQuestionIds: z.any(),
+  completedFateCardIds: z.any(),
+  activeRoundEffects: z.array(z.any()),
+  currentFateCard: z.any().nullable(),
+  pendingFateCard: z.any().nullable(),
+  activeFateCard: z.any().nullable(),
+  currentQuestion: z.any().nullable(),
+  currentAnswers: z.array(z.any()),
+  notWrongCount: z.number(),
+  currentCategory: z.string(),
+  divinations: z.array(z.any()),
+  roundAnswerTally: z.object({ A: z.number(), B: z.number(), C: z.number() }),
+  activePowerUps: z.array(z.any())
+});
+
+function validateGameState(data) {
+  const result = gameStateSchema.safeParse(data);
+  return result.success ? result.data : null;
+}
+
+module.exports = { gameStateSchema, validateGameState };

@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Automatically persist progress when the page unloads
+  window.addEventListener('beforeunload', () => {
+    State.saveGame();
+  });
+
   // --- Central Action Handler ---
   function handleAction(action) {
     console.log(`[ACTION]: ${action}`);
