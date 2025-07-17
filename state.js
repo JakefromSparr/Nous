@@ -6,7 +6,17 @@
 const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
-  let fateCardDeck = [];
+
+  // A complete, combined, and shuffled Fate Deck used when tempting fate
+  const fateDeck = [
+    { id: "DIV001", type: 'DIV', text: "A choice made in haste will ripple outwards." },
+    { id: "DIV002", type: 'DIV', text: "Doubt is a shadow that you cast yourself." },
+    { id: "DIV003", type: 'DIV', text: "The path of least resistance leads to the steepest fall." },
+    { id: "DYN001", type: 'DYN', text: "Whispers of Doubt: The next 'Wrong' answer costs an extra Thread." },
+    { id: "DYN002", type: 'DYN', text: "Sudden Clarity: The first 'Revelatory' answer this round awards bonus points." },
+    { id: "DYN003", type: 'DYN', text: "Shared Burden: If the Thread frays, all players feel the chill." },
+    { id: "DYN004", type: 'DYN', text: "Scholar's Boon: Your knowledge protects you. Gain +1 Thread at the start of this round." }
+  ];
   let divinationDeck = [];
 
   // --- Game State ---
@@ -26,6 +36,8 @@ const State = (() => {
     completedFateCardIds: new Set(),
     activeRoundEffects: [],
     currentFateCard: null,
+    pendingFateCard: null,
+    activeFateCard: null,
     currentQuestion: null,
     currentAnswers: [],
     notWrongCount: 0,
@@ -36,16 +48,13 @@ const State = (() => {
   // --- Data Loading ---
   const loadData = async () => {
     try {
-      const [questionsRes, fateCardsRes, divinationsRes] = await Promise.all([
+      const [questionsRes, divinationsRes] = await Promise.all([
         fetch('questions/questions.json'),
-        fetch('fate-cards.json'),
         fetch('divinations/divinations.json')
       ]);
       if (!questionsRes.ok) throw new Error('Failed to load questions');
-      if (!fateCardsRes.ok) throw new Error('Failed to load fate cards');
       if (!divinationsRes.ok) throw new Error('Failed to load divinations');
       questionDeck = await questionsRes.json();
-      fateCardDeck = await fateCardsRes.json();
       divinationDeck = await divinationsRes.json();
     } catch (err) {
       console.error('[LOAD DATA]', err);
@@ -69,6 +78,8 @@ const State = (() => {
         completedFateCardIds: new Set(),
         activeRoundEffects: [],
         currentFateCard: null,
+        pendingFateCard: null,
+        activeFateCard: null,
         currentQuestion: null,
         currentAnswers: [],
         notWrongCount: 0,
@@ -80,12 +91,20 @@ const State = (() => {
   const startNewRound = () => {
     gameState.roundNumber++;
     gameState.roundScore = 0;
-    gameState.thread = gameState.roundsToWin - gameState.roundsWon + 1;
+    const remainingWins = gameState.roundsToWin - gameState.roundsWon;
+    gameState.thread = remainingWins + 1;
     gameState.notWrongCount = 0;
     gameState.activeRoundEffects = [];
     gameState.currentFateCard = null;
     gameState.currentCategory = 'Mind, Past';
     gameState.currentAnswers = [];
+
+    // Activate any pending fate card for this round
+    gameState.activeFateCard = gameState.pendingFateCard;
+    if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN004') {
+      gameState.thread++; // Scholar's Boon immediate effect
+    }
+    gameState.pendingFateCard = null;
   };
 
   const endRound = (outcome = 'lose') => {
@@ -139,15 +158,13 @@ const State = (() => {
 
   // --- Fate Card Logic ---
   const drawFateCard = () => {
-    const availableCards = fateCardDeck.filter(card => {
-        const meetsAudacity = card.audacityMin ? gameState.audacity >= card.audacityMin : true;
-        const meetsPrereqs = card.prerequisites ? card.prerequisites.every(id => gameState.completedFateCardIds.has(id)) : true;
-        return meetsAudacity && meetsPrereqs;
-    });
-
-    if (availableCards.length === 0) return null;
-    const idx = Math.floor(Math.random() * availableCards.length);
-    return availableCards[idx];
+    if (gameState.pendingFateCard) {
+      console.log('[FATE]: A fate is already pending.');
+      return null;
+    }
+    const drawn = fateDeck[Math.floor(Math.random() * fateDeck.length)];
+    gameState.pendingFateCard = drawn;
+    return drawn;
   };
 
   const setCurrentFateCard = (card) => {
@@ -259,20 +276,43 @@ const State = (() => {
     const cls = selected.answerClass;
 
     let isCorrect = false;
+    let threadChange = 0;
+    let scoreChange = 0;
+
     if (cls === 'Typical') {
       isCorrect = true;
-      gameState.roundScore += 2;
+      scoreChange += 2;
       gameState.notWrongCount++;
       gameState.correctAnswersThisDifficulty++;
     } else if (cls === 'Revelatory') {
       isCorrect = true;
-      gameState.roundScore += 1;
-      gameState.thread += 1;
+      scoreChange += 1;
+      threadChange += 1;
       gameState.notWrongCount++;
       gameState.correctAnswersThisDifficulty++;
     } else {
-      gameState.thread -= 1;
+      threadChange -= 1;
     }
+
+    // Apply effects from the active fate card
+    if (gameState.activeFateCard) {
+      switch (gameState.activeFateCard.id) {
+        case 'DYN001': // Whispers of Doubt
+          if (!isCorrect) threadChange -= 1;
+          break;
+        case 'DYN002': // Sudden Clarity
+          if (isCorrect && cls === 'Revelatory') {
+            scoreChange += 1; // bonus point
+          }
+          break;
+        case 'DYN003':
+          // Shared Burden has no direct state change here
+          break;
+      }
+    }
+
+    gameState.thread += threadChange;
+    gameState.roundScore += scoreChange;
 
     if (gameState.correctAnswersThisDifficulty > 3) {
       advanceDifficulty();
@@ -287,7 +327,7 @@ const State = (() => {
       question: question.text,
       answer: selected.text,
       explanation: selected.explanation,
-      outcomeText: isCorrect ? 'The thread holds.' : 'The thread frays.'
+      outcomeText: isCorrect ? 'The thread holds.' : `The thread frays by ${Math.abs(threadChange)}`
     };
   };
 
