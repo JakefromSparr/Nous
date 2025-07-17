@@ -123,7 +123,39 @@
         "explanation": "Incorrect. you don’t need to see in order to read braille, eyes closed or open, you can still read.",
         "changePoint": 0,
         "changeThread": -1,
-        "traitChanges": { "X": -1, "Y": -1, "Z": 0 }
+    "traitChanges": { "X": -1, "Y": -1, "Z": 0 }
+      }
+    ]
+  },
+  {
+    "questionId": 5,
+    "category": "Soul",
+    "title": "Deep Freeze",
+    "text": "Which emotion can chill the spirit?",
+    "answers": [
+      {
+        "text": "Fear",
+        "answerClass": "Typical",
+        "explanation": "Fear grips you with an icy hand.",
+        "changePoint": 2,
+        "changeThread": 0,
+        "traitChanges": { "X": 0, "Y": 0, "Z": 1 }
+      },
+      {
+        "text": "Joy",
+        "answerClass": "Revelatory",
+        "explanation": "Even joy can freeze when it feels out of place.",
+        "changePoint": 1,
+        "changeThread": 1,
+        "traitChanges": { "X": 1, "Y": 1, "Z": 0 }
+      },
+      {
+        "text": "Hunger",
+        "answerClass": "Wrong",
+        "explanation": "Hunger is a gnawing heat, not a chill.",
+        "changePoint": 0,
+        "changeThread": -1,
+        "traitChanges": { "X": -1, "Y": 0, "Z": -1 }
       }
     ]
   }
