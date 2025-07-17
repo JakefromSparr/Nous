@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Game Initialization ---
   async function init() {
-    await State.loadQuestions();
-    await State.loadDivinations();
+    await State.loadData();
     UI.updateScreen('welcome');
     console.log('[INIT]: Nous initialized. Welcome.');
   }
