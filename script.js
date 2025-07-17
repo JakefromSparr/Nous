@@ -148,18 +148,35 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'end-round':
         const success = State.cutThread();
         UI.updateDisplayValues(State.getState());
+        let fateSummary = '';
         if (typeof Fate !== 'undefined') {
           const tally = { A: 0, B: 0, C: 0 };
           State.getState().answeredThisRound.forEach(r => { tally[r.letter] = (tally[r.letter] || 0) + 1; });
-          Fate.resolveRound(tally, success);
+          const fateRes = Fate.resolveRound(tally, success);
+          State.applyFateResults(fateRes);
           State.resetRound();
+          const parts = [];
+          if (fateRes.roundScoreMultiplier && fateRes.roundScoreMultiplier !== 1) {
+            parts.push(`round score x${fateRes.roundScoreMultiplier}`);
+          }
+          if (fateRes.roundScoreDelta) {
+            const sign = fateRes.roundScoreDelta > 0 ? '+' : '';
+            parts.push(`${sign}${fateRes.roundScoreDelta} round pts`);
+          }
+          if (fateRes.scoreDelta) {
+            const sign = fateRes.scoreDelta > 0 ? '+' : '';
+            parts.push(`${sign}${fateRes.scoreDelta} score`);
+          }
+          fateSummary = parts.length ? `Fate resolves: ${parts.join(', ')}` : '';
         }
+        UI.updateDisplayValues(State.getState());
         if (success) {
           UI.updateScreen('game-lobby');
         } else {
           UI.showFailure(State.getState().roundScore);
           UI.updateScreen('failure');
         }
+        if (fateSummary) UI.showFateResult(fateSummary);
         break;
       case 'double-points':
         if (State.spendThreadToWeave()) {

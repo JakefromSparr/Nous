@@ -419,6 +419,14 @@ const State = (() => {
     gameState.activeRoundEffects = [];
   };
 
+  const applyFateResults = (res = {}) => {
+    if (!res) return;
+    const { scoreDelta = 0, roundScoreDelta = 0, roundScoreMultiplier = 1 } = res;
+    gameState.score += scoreDelta;
+    gameState.roundScore += roundScoreDelta;
+    gameState.roundScore *= roundScoreMultiplier;
+  };
+
   const drawDivination = () => {
     if (divinationDeck.length === 0) return null;
     const line = divinationDeck[Math.floor(Math.random() * divinationDeck.length)];
@@ -480,5 +488,6 @@ const State = (() => {
     loadGame,
     recordAnswer,
     resetRound,
+    applyFateResults,
   };
 })();
