@@ -42,3 +42,4 @@
 - Injected fate engine script into HTML so 'Tempt Fate' draws cards correctly.
 - Applied fate engine results to game state and show summary after each round.
 - Converted fate engine to ES module and updated HTML loader for browser compatibility.
+- Simplified fate engine validation and removed zod import for direct browser loading.

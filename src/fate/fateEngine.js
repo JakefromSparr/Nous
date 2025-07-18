@@ -1,9 +1,9 @@
-import { z } from 'zod';
-import { FateCard } from './schema.js';
 import deckData from '../../fate-cards.json' assert { type: 'json' };
 
-const DeckSchema = z.array(FateCard);
-const DYN_DECK = DeckSchema.parse(deckData);
+// minimal runtime validation so browser doesn't need extra deps
+const DYN_DECK = Array.isArray(deckData)
+  ? deckData.filter(c => c && c.id && c.choices)
+  : [];
 
 let currentCard = null;
 let storedEffects = [];
