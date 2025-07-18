@@ -38,14 +38,15 @@ describe('basic playthrough', () => {
     const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
     dom = new JSDOM(html, { runScripts: 'dangerously', url: 'http://localhost' });
     const wnd = dom.window;
-    const inject = (code) => {
+    const inject = (code, type = 'text/javascript') => {
       const s = wnd.document.createElement('script');
       s.textContent = code;
+      s.type = type;
       wnd.document.body.appendChild(s);
     };
     inject(fs.readFileSync(path.join(__dirname, '../state.js'), 'utf8'));
     inject(fs.readFileSync(path.join(__dirname, '../ui.js'), 'utf8'));
-    inject(fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8'));
+    inject(fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8'), 'module');
     inject(fs.readFileSync(path.join(__dirname, '../script.js'), 'utf8'));
     wnd.document.dispatchEvent(new wnd.Event('DOMContentLoaded'));
     jest.runAllTimers();

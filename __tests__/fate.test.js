@@ -1,5 +1,22 @@
-const Fate = require('../src/fate/fateEngine');
+const fs = require('fs');
+const path = require('path');
+
+
+let Fate;
 const cards = require('../fate-cards.json');
+
+beforeAll(() => {
+  let code = fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8');
+  code = code.replace("import { z } from 'zod';", "const { z } = require('zod');")
+             .replace("import { FateCard } from './schema.js';", "const { FateCard } = require('../src/fate/schema.js');")
+             .replace(/import deckData from '\.\.\/\.\.\/fate-cards.json' assert { type: 'json' };/, "const deckData = require('../fate-cards.json');")
+             .replace(/export function /g, 'function ');
+  code += '\nmodule.exports = { draw, getButtonLabels, choose, resolveRound };';
+  const mod = { exports: {} };
+  const func = new Function('require','module','exports', code);
+  func(require, mod, mod.exports);
+  Fate = mod.exports;
+});
 
 test('DYN001 wager adds score per C answer', () => {
   let card;

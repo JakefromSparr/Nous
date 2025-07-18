@@ -41,3 +41,4 @@
 - Refactored fate system into new module with schema validation; added UI hooks and tests for dynamic cards.
 - Injected fate engine script into HTML so 'Tempt Fate' draws cards correctly.
 - Applied fate engine results to game state and show summary after each round.
+- Converted fate engine to ES module and updated HTML loader for browser compatibility.
