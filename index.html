@@ -9,6 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=EB+Garamond&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Load Zod for browser validation -->
+    <script type="module">
+      import * as z from 'https://cdn.jsdelivr.net/npm/zod@4.0.5/index.js';
+      window.zod = z;
+    </script>
     <!-- Scripts are deferred to ensure elements exist before execution -->
     <script src="state.js" defer></script>
     <script src="ui.js" defer></script>
