@@ -7,7 +7,8 @@ const cards = require('../fate-cards.json');
 
 beforeAll(() => {
   let code = fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8');
-  code = code.replace(/import deckData from '\.\.\/\.\.\/fate-cards.json' assert { type: 'json' };/, "const deckData = require('../fate-cards.json');")
+  code = code.replace("import { z } from 'https://cdn.jsdelivr.net/npm/zod/+esm';", "const { z } = require('zod');")
+             .replace(/import deckData from '\.\.\/\.\.\/fate-cards.json' assert { type: 'json' };/, "const deckData = require('../fate-cards.json');")
              .replace(/export function /g, 'function ');
   code += '\nmodule.exports = { draw, getButtonLabels, choose, resolveRound };';
   const mod = { exports: {} };

@@ -1,9 +1,20 @@
+import { z } from 'https://cdn.jsdelivr.net/npm/zod/+esm';
 import deckData from '../../fate-cards.json' assert { type: 'json' };
 
-// minimal runtime validation so browser doesn't need extra deps
-const DYN_DECK = Array.isArray(deckData)
-  ? deckData.filter(c => c && c.id && c.choices)
-  : [];
+const Choice = z.object({
+  label: z.string().optional(),
+  effect: z.any().optional()
+});
+
+const FateCard = z.object({
+  id: z.string(),
+  title: z.string(),
+  text: z.string(),
+  choices: z.array(Choice).max(3)
+});
+
+const DeckSchema = z.array(FateCard);
+const DYN_DECK = DeckSchema.parse(deckData);
 
 let currentCard = null;
 let storedEffects = [];
