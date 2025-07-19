@@ -47,3 +47,4 @@
 - Integrated CDN import for fate engine validation so browser module resolves without bundler.
 - Removed duplicate DYN005 thread bonus to keep start of round balanced.
 - Added QuestionEngine module with tiered questions for modular trivia management.
+- Routed pull-thread to new QuestionEngine so tiered questions progress correctly.
