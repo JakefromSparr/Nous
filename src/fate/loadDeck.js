@@ -1,5 +1,5 @@
-const { FateCard } = require('./schema');
-const cards = require('../../fate-cards.json');
+import { FateCard } from './schema.js';
+import cards from '../../fate-cards.json' assert { type: 'json' };
 
 const sanitize = (card) => ({
   id: card.id,
@@ -14,6 +14,4 @@ const sanitize = (card) => ({
   })
 });
 
-const DECK = cards.map((c) => FateCard.parse(sanitize(c)));
-
-module.exports = { DECK };
+export const DECK = cards.map((c) => FateCard.parse(sanitize(c)));

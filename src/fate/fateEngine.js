@@ -1,17 +1,6 @@
-import { z } from 'https://cdn.jsdelivr.net/npm/zod/+esm';
+import { z } from 'zod';
 import deckData from '../../fate-cards.json' assert { type: 'json' };
-
-const Choice = z.object({
-  label: z.string().optional(),
-  effect: z.any().optional()
-});
-
-const FateCard = z.object({
-  id: z.string(),
-  title: z.string(),
-  text: z.string(),
-  choices: z.array(Choice).max(3)
-});
+import { FateCard } from './schema.js';
 
 const DeckSchema = z.array(FateCard);
 const DYN_DECK = DeckSchema.parse(deckData);
