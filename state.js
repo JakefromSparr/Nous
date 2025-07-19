@@ -66,7 +66,7 @@ const TRAIT_LOADINGS = {
 const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
-  const qEngine = typeof QuestionEngine !== 'undefined' ? new QuestionEngine() : null;
+  let qEngine = null;
 
   let fateCardDeck = [];
   let divinationDeck = [];
@@ -103,7 +103,24 @@ const State = (() => {
     questionDeck: []
   };
 
+  // Load decks from local files and prepare the question engine.
   const loadData = async () => {
+    try {
+      const [{ default: fateDeck }, { default: questions }] = await Promise.all([
+        import('./src/data/fateDeck.js'),
+        import('./src/data/questionDeck.js')
+      ]);
+      fateCardDeck = [...fateDeck];
+      questionDeck = [...questions];
+      divinationDeck = [];
+      if (typeof QuestionEngine !== 'undefined') {
+        qEngine = new QuestionEngine(questionDeck);
+      }
+    } catch (err) {
+      console.error('[LOAD DATA]', err);
+      fateCardDeck = [];
+      questionDeck = [];
+      qEngine = null;
     const [{ default: fateDeck }, { default: questions }] = await Promise.all([
       import('./src/data/fateDeck.js'),
       import('./src/data/questionDeck.js')
@@ -326,49 +343,14 @@ const State = (() => {
 
   // --- Question Logic ---
   const getNextQuestion = () => {
-    if (qEngine) {
-      const q = qEngine.nextQuestion();
-      if (!q) { console.warn('[QUESTION]: Deck exhausted'); return null; }
-      gameState.currentQuestion = q;
-      gameState.currentAnswers = q.answers.slice();
-    } else {
-      if (questionDeck.length === 0) {
-        console.warn('[QUESTION]: Deck is empty');
-        return null;
-      }
-
-      const { difficultyLevel, answeredQuestionIds } = gameState;
-
-      const minId = (difficultyLevel - 1) * 10 + 1;
-      const maxId = difficultyLevel * 10 - 1;
-
-      let available = questionDeck.filter(q =>
-        q.questionId >= minId &&
-        q.questionId <= maxId &&
-        !answeredQuestionIds.has(q.questionId)
-      );
-
-      if (available.length === 0) {
-        advanceDifficulty();
-        const newMin = (gameState.difficultyLevel - 1) * 10 + 1;
-        const newMax = gameState.difficultyLevel * 10 - 1;
-        available = questionDeck.filter(q =>
-          q.questionId >= newMin &&
-          q.questionId <= newMax &&
-          !answeredQuestionIds.has(q.questionId)
-        );
-      }
-
-      if (available.length === 0) {
-        console.warn('[QUESTION]: No available questions for any difficulty.');
-        return null;
-      }
-
-      const idx = Math.floor(Math.random() * available.length);
-      const q = available[idx];
-      gameState.currentQuestion = q;
-      gameState.currentAnswers = q.answers.slice();
+    if (!qEngine) {
+      console.warn('[QUESTION]: Engine unavailable');
+      return null;
     }
+    const q = qEngine.nextQuestion();
+    if (!q) { console.warn('[QUESTION]: Deck exhausted'); return null; }
+    gameState.currentQuestion = q;
+    gameState.currentAnswers = q.answers.slice();
 
     shuffleArray(gameState.currentAnswers);
 

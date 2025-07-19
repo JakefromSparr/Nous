@@ -1,12 +1,15 @@
+import { CLASS_SCORES, TRAIT_MAP } from './constants.js';
+// The QuestionEngine expects a preloaded deck of question objects.
+// This keeps the engine flexible and removes any direct data fetching logic.
 import { CLASS_SCORES, CLASS_TRAIT_BASE } from './constants.js';
 import { TRAIT_LOADINGS } from './traitLoadings.js';
 import raw from '../data/questions.json' assert { type: 'json' };
 
-const pools = {
-  Tier1: raw.questions.filter(q => q.difficultyTier === 'Tier1'),
-  Tier2: raw.questions.filter(q => q.difficultyTier === 'Tier2'),
-  Tier3: raw.questions.filter(q => q.difficultyTier === 'Tier3')
-};
+let defaultDeck = [];
+
+export function setDefaultDeck(deck) {
+  defaultDeck = Array.isArray(deck) ? deck : [];
+}
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -17,10 +20,16 @@ function shuffle(arr) {
 }
 
 export class QuestionEngine {
-  constructor() {
+  constructor(questionDeck = defaultDeck) {
     this.tier = 'Tier1';
     this.answered = new Set();
     this.drawnThisTier = 0;
+    this.deck = Array.isArray(questionDeck) ? questionDeck : [];
+    this.pools = {
+      Tier1: this.deck.filter(q => q.difficultyTier === 'Tier1'),
+      Tier2: this.deck.filter(q => q.difficultyTier === 'Tier2'),
+      Tier3: this.deck.filter(q => q.difficultyTier === 'Tier3')
+    };
   }
 
   nextQuestion() {
@@ -31,7 +40,7 @@ export class QuestionEngine {
       : ['Tier1'];
 
     for (const t of tierOrder) {
-      const pool = pools[t].filter(q => !this.answered.has(q.questionId));
+      const pool = this.pools[t].filter(q => !this.answered.has(q.questionId));
       if (pool.length) {
         const q = shuffle(pool)[0];
         this.randomizeAnswers(q);
@@ -44,7 +53,7 @@ export class QuestionEngine {
   randomizeAnswers(q) { q.answers = shuffle([...q.answers]); }
 
   resolve(qId, answerIndex, state) {
-    const q = raw.questions.find(q => q.questionId === qId);
+    const q = this.deck.find(q => q.questionId === qId);
     const ans = q.answers[answerIndex];
     const { points, thread } = CLASS_SCORES[ans.answerClass];
 
@@ -69,7 +78,7 @@ export class QuestionEngine {
     this.drawnThisTier++;
 
     if ((this.drawnThisTier >= 4 ||
-        !pools[this.tier].some(q => !this.answered.has(q.questionId)))
+        !this.pools[this.tier].some(q => !this.answered.has(q.questionId)))
         && this.tier !== 'Tier3') {
       this.drawnThisTier = 0;
       this.tier = this.tier === 'Tier1' ? 'Tier2' : 'Tier3';
