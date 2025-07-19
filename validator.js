@@ -1,4 +1,4 @@
-const { z } = require('zod');
+import { z } from 'zod';
 
 const gameStateSchema = z.object({
   currentScreen: z.string(),
@@ -22,15 +22,13 @@ const gameStateSchema = z.object({
   currentAnswers: z.array(z.any()),
   notWrongCount: z.number(),
   currentCategory: z.string(),
-  divinations: z.array(z.any()),
   roundAnswerTally: z.object({ A: z.number(), B: z.number(), C: z.number() }),
   traits: z.object({ X: z.number(), Y: z.number(), Z: z.number() }),
   activePowerUps: z.array(z.any())
 });
 
-function validateGameState(data) {
-  const result = gameStateSchema.safeParse(data);
-  return result.success ? result.data : null;
+export function validateGameState(data) {
+  return gameStateSchema.parse(data);
 }
 
-module.exports = { gameStateSchema, validateGameState };
+export { gameStateSchema };

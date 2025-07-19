@@ -69,7 +69,6 @@ const State = (() => {
   let qEngine = null;
 
   let fateCardDeck = [];
-  let divinationDeck = [];
 
   // --- Game State ---
   let gameState = {
@@ -94,7 +93,6 @@ const State = (() => {
     currentAnswers: [],
     notWrongCount: 0,
     currentCategory: 'Mind, Past',
-    divinations: [],
     roundAnswerTally: { A: 0, B: 0, C: 0 },
     traits: { X: 0, Y: 0, Z: 0 },
     activePowerUps: [],
@@ -115,7 +113,6 @@ const State = (() => {
       questionDeck = [...qDeck];
       gameState.fateCardDeck = [...fateDeck];
       gameState.questionDeck = [...qDeck];
-      divinationDeck = [];
       if (typeof QuestionEngine !== 'undefined') {
         QuestionEngine.setDefaultDeck(questionDeck);
         qEngine = new QuestionEngine(questionDeck);
@@ -179,7 +176,6 @@ const State = (() => {
         currentAnswers: [],
         notWrongCount: 0,
         currentCategory: 'Mind, Past',
-        divinations: [],
         roundAnswerTally: { A: 0, B: 0, C: 0 },
         traits: { X: 0, Y: 0, Z: 0 },
         activePowerUps: [],
@@ -494,12 +490,6 @@ const State = (() => {
     gameState.roundScore *= roundScoreMultiplier;
   };
 
-  const drawDivination = () => {
-    if (divinationDeck.length === 0) return null;
-    const line = divinationDeck[Math.floor(Math.random() * divinationDeck.length)];
-    gameState.divinations.push(line);
-    return line;
-  };
 
   const hasWonGame = () => gameState.roundsWon >= gameState.roundsToWin;
 
@@ -544,7 +534,6 @@ const State = (() => {
     setCurrentFateCard,
     getCurrentFateCard,
     chooseFateOption,
-    drawDivination,
     getNextQuestion,
     evaluateAnswer,
     incrementAudacity,

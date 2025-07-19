@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const controller = document.getElementById('controller');
+  const FateEngine = window.Fate || {};
 
   // --- Game Initialization ---
   async function init() {
@@ -127,15 +128,15 @@ document.addEventListener('DOMContentLoaded', () => {
         attachWelcomeKeys();
         break;
       case 'tempt-fate': {
-        if (typeof Fate === 'undefined') break;
-        const card = Fate.draw();
+        if (typeof FateEngine.draw !== 'function') break;
+        const card = FateEngine.draw();
         if (!card) break;
         State.setCurrentFateCard(card);
-        UI.showFate(card);
-        UI.setButtonLabels(Fate.getButtonLabels());
+        UI.showFateCard(card);
+        UI.showFateChoices(FateEngine.getButtonLabels?.() ?? []);
         ['btn-1','btn-2','btn-3'].forEach((id,i)=>{
           document.getElementById(id).onclick = () => {
-            Fate.choose(i);
+            FateEngine.choose?.(i);
             UI.updateScreen('game-lobby');
           };
         });
@@ -153,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const success = State.cutThread();
         UI.updateDisplayValues(State.getState());
         let fateSummary = '';
-        if (typeof Fate !== 'undefined') {
+        if (typeof FateEngine.resolveRound === 'function') {
           const tally = { A: 0, B: 0, C: 0 };
           State.getState().answeredThisRound.forEach(r => { tally[r.letter] = (tally[r.letter] || 0) + 1; });
-          const fateRes = Fate.resolveRound(tally, success);
+          const fateRes = FateEngine.resolveRound(tally, success);
           State.applyFateResults(fateRes);
           State.resetRound();
           const parts = [];

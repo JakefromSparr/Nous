@@ -246,9 +246,6 @@ const confirmParticipants = () => {
     if ('currentCategory' in data) {
       document.getElementById('category-hint').textContent = data.currentCategory;
     }
-    if ('divinations' in data) {
-      document.getElementById('active-divinations').textContent = data.divinations.join(', ');
-    }
     if ('activeRoundEffects' in data) {
       const container = document.querySelector('#divinations-display p');
       const titles = data.activeRoundEffects.map(e => e.cardTitle).filter(Boolean);
@@ -273,6 +270,16 @@ const confirmParticipants = () => {
     document.getElementById('fate-a-text').textContent = a;
     document.getElementById('fate-b-text').textContent = b;
     document.getElementById('fate-c-text').textContent = c;
+  };
+
+  const showFateChoices = (labels) => {
+    ['btn-1', 'btn-2', 'btn-3'].forEach((id, i) => {
+      const btn = document.getElementById(id);
+      const label = labels[i] || '';
+      btn.querySelector('.button-label').innerText = label || ' ';
+      btn.disabled = label === '';
+      btn.classList.toggle('hidden', label === '');
+    });
   };
 
   const showFate = (card) => {
@@ -308,6 +315,7 @@ const confirmParticipants = () => {
     showFailure,
     showFate,
     showFateCard,
+    showFateChoices,
     showFateResult,
     showParticipantEntry,
     adjustParticipantCount,

@@ -56,3 +56,4 @@
 - Implemented layered trait system with per-question weights and overrides for deeper personality scoring.
 - Fixed Jest setup and global State reference for headless tests.
 - Fixed loadData imports and provided fallback question engine to pass tests without dynamic modules.
+- Removed divination mechanics and standardized fate card UI calls.
