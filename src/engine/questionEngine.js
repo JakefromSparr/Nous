@@ -1,9 +1,5 @@
-import { CLASS_SCORES, TRAIT_MAP } from './constants.js';
-// The QuestionEngine expects a preloaded deck of question objects.
-// This keeps the engine flexible and removes any direct data fetching logic.
 import { CLASS_SCORES, CLASS_TRAIT_BASE } from './constants.js';
 import { TRAIT_LOADINGS } from './traitLoadings.js';
-import raw from '../data/questions.json' assert { type: 'json' };
 
 let defaultDeck = [];
 
