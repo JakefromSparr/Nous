@@ -9,3 +9,9 @@ export const TRAIT_MAP = {
   Revelatory:  { X: 0,   Y: +2, Z: +1 },
   Wrong:       { X: -1,  Y: -1, Z: 0  }
 };
+
+export const CLASS_TRAIT_BASE = {
+  Typical:    { X: -1, Y: -1, Z: -1 },
+  Revelatory: { X: +2, Y: +3, Z: +2 },
+  Wrong:      { X: -2, Y: -2, Z: -2 }
+};

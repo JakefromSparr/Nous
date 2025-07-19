@@ -1,4 +1,5 @@
-import { CLASS_SCORES, TRAIT_MAP } from './constants.js';
+import { CLASS_SCORES, CLASS_TRAIT_BASE } from './constants.js';
+import { TRAIT_LOADINGS } from './traitLoadings.js';
 import raw from '../data/questions.json' assert { type: 'json' };
 
 const pools = {
@@ -50,9 +51,18 @@ export class QuestionEngine {
     state.points  += points;
     state.thread  += thread;
 
-    const traitDelta = ans.traits || TRAIT_MAP[ans.answerClass];
-    Object.keys(traitDelta).forEach(k => {
-      state.traits[k] = (state.traits[k] || 0) + traitDelta[k];
+    const base     = CLASS_TRAIT_BASE[ans.answerClass];
+    const cfg      = TRAIT_LOADINGS[qId] || {};
+    const weights  = cfg.axisWeight || {};
+    const override = cfg.overrides?.[ans.answerClass] || {};
+
+    ['X','Y','Z'].forEach(axis => {
+      const delta = axis in override
+        ? override[axis]
+        : base[axis] * (weights[axis] ?? 1);
+
+      state.traits[axis] = Math.max(-9, Math.min(9,
+        (state.traits[axis] || 0) + delta));
     });
 
     this.answered.add(qId);

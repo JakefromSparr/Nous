@@ -15,6 +15,54 @@ const TRAIT_MAP = {
   Wrong:       { X: -1,  Y: -1, Z: 0  }
 };
 
+const CLASS_TRAIT_BASE = {
+  Typical:    { X: -1, Y: -1, Z: -1 },
+  Revelatory: { X: +2, Y: +3, Z: +2 },
+  Wrong:      { X: -2, Y: -2, Z: -2 }
+};
+
+const TRAIT_LOADINGS = {
+  /* ---------- Tier-1 ---------- */
+  101: { axisWeight: { Z: 0 } },
+  103: { axisWeight: { Z: 0 } },
+  104: { axisWeight: { Z: 0.5 } },
+  105: { axisWeight: { Z: 0 } },
+  106: { axisWeight: { Z: 0 } },
+  107: { axisWeight: { Z: 0.5 } },
+
+  /* Custom per-answer override example */
+  108: {
+    axisWeight: { Z: 1.5 },
+    overrides: {
+      Typical:     { Z: -3 },
+      Revelatory:  { X: -1, Y: 0,  Z: +2 },
+      Wrong:       { X: -2, Y: +1, Z: +1 }
+    }
+  },
+
+  109: { axisWeight: { Z: 1.5 } },
+
+  /* ---------- Tier-2 ---------- */
+  201: { axisWeight: { Z: 0 } },
+  202: { axisWeight: { Z: 1.5 } },
+  203: { axisWeight: { Z: 0 } },
+  204: { axisWeight: { Z: 0 } },
+
+  205: {
+    axisWeight: { X: 0.5, Y: 0.7, Z: 1.2 },
+    overrides: {
+      Typical:     { X: +1, Y: -2, Z: -2 },
+      Revelatory:  { X: -2, Y: +4, Z: +2 },
+      Wrong:       { X: -2, Y: +1, Z: -3 }
+    }
+  },
+
+  206: { axisWeight: { Z: 1 } },
+  207: { axisWeight: { Z: 1.5 } },
+  208: { /* TBD */ },
+  209: { axisWeight: { Z: 0 } }
+};
+
 const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
@@ -385,9 +433,18 @@ const State = (() => {
       gameState.correctAnswersThisDifficulty++;
     }
 
-    const traitDelta = selected.traits || TRAIT_MAP[cls];
-    Object.keys(traitDelta).forEach(k => {
-      gameState.traits[k] = (gameState.traits[k] || 0) + traitDelta[k];
+    const base     = CLASS_TRAIT_BASE[cls];
+    const cfg      = TRAIT_LOADINGS[question.questionId] || {};
+    const weights  = cfg.axisWeight || {};
+    const override = cfg.overrides?.[cls] || {};
+
+    ['X','Y','Z'].forEach(axis => {
+      const delta = axis in override
+        ? override[axis]
+        : base[axis] * (weights[axis] ?? 1);
+
+      gameState.traits[axis] = Math.max(-9, Math.min(9,
+        (gameState.traits[axis] || 0) + delta));
     });
 
     // Apply effects from the active fate card
