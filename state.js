@@ -539,3 +539,6 @@ const State = (() => {
     applyFateResults,
   };
 })();
+if (typeof window !== 'undefined') {
+  window.State = State;
+}
