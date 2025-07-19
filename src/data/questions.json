@@ -1,6 +1,6 @@
 {
   "questions": [
-    /* ---------- Tier 1 : IDs 101-120  ---------- */
+    
     {
       "questionId": 101,
       "category": "Mind",
@@ -137,7 +137,7 @@
       ]
     },
 
-    /* ---------- Tier 2 : IDs 201-220  ---------- */
+
     {
       "questionId": 201,
       "category": "Mind",
@@ -267,6 +267,6 @@
       ]
     }
 
-    /* ---- IDs 210-320 ready for future additions ---- */
+
   ]
 }

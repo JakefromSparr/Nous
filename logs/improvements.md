@@ -50,6 +50,7 @@
 - Routed pull-thread to new QuestionEngine so tiered questions progress correctly.
 - Fixed Tempt Fate handler and UI labels to prevent undefined choices.
 - Hard-wired local decks to remove fetch dependency and speed up tests.
+- Stripped comments from question decks so pull-thread loads Tier 1 questions.
 - Integrated class score constants and trait tracking in State.
 - Forced QuestionEngine to accept loaded JSON deck for reliable draws.
 - Implemented layered trait system with per-question weights and overrides for deeper personality scoring.
