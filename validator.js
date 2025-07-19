@@ -24,6 +24,7 @@ const gameStateSchema = z.object({
   currentCategory: z.string(),
   divinations: z.array(z.any()),
   roundAnswerTally: z.object({ A: z.number(), B: z.number(), C: z.number() }),
+  traits: z.object({ X: z.number(), Y: z.number(), Z: z.number() }),
   activePowerUps: z.array(z.any())
 });
 

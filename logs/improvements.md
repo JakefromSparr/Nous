@@ -50,3 +50,4 @@
 - Routed pull-thread to new QuestionEngine so tiered questions progress correctly.
 - Fixed Tempt Fate handler and UI labels to prevent undefined choices.
 - Hard-wired local decks to remove fetch dependency and speed up tests.
+- Integrated class score constants and trait tracking in State.
