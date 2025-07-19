@@ -52,25 +52,30 @@ const State = (() => {
 
   const loadData = async () => {
     try {
-      const [questionsRes, fateCardsRes, divinationsRes] = await Promise.all([
-        fetch('questions/questions.json'),
-        fetch('fate-cards.json'),
-        fetch('divinations/divinations.json')
+      const [{ default: fateDeck }, { default: questions }] = await Promise.all([
+        import('./src/data/fateDeck.js'),
+        import('./src/data/questionDeck.js')
       ]);
-      if (!questionsRes.ok) throw new Error('Failed to load questions');
-      if (!fateCardsRes.ok) throw new Error('Failed to load fate cards');
-      if (!divinationsRes.ok) throw new Error('Failed to load divinations');
-      questionDeck = await questionsRes.json();
-      fateCardDeck = await fateCardsRes.json();
-      divinationDeck = await divinationsRes.json();
-      console.table({
-        questions: questionDeck.length,
-        fates: fateCardDeck.length,
-        divs: divinationDeck.length
-      });
+      fateCardDeck = [...fateDeck];
+      questionDeck = [...questions];
+      divinationDeck = [];
+
+      if (typeof window !== 'undefined' && window.ENABLE_REMOTE_DECKS) {
+        try {
+          const [f, q] = await Promise.all([
+            fetch('fate-cards.json').then(r => r.json()),
+            fetch('questions/questions.json').then(r => r.json())
+          ]);
+          fateCardDeck = f;
+          questionDeck = q;
+        } catch (err) {
+          console.warn('[remote-deck] fetch failed, using local data', err);
+        }
+      }
     } catch (err) {
       console.error('[LOAD DATA]', err);
       fateCardDeck = [];
+      questionDeck = [];
     }
   };
 

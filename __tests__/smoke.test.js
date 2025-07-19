@@ -10,31 +10,6 @@ describe('basic playthrough', () => {
   beforeEach(async () => {
     jest.useFakeTimers();
 
-    global.fetch = jest.fn((url) => {
-      if (url.includes('questions')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve([
-          { questionId: 1, category: 'Mind', title: 'Q1', text: 'T1', answers: [
-            { text: 'A', answerClass: 'Typical', explanation: '' },
-            { text: 'B', answerClass: 'Wrong', explanation: '' },
-            { text: 'C', answerClass: 'Wrong', explanation: '' }
-          ] }
-        ]) });
-      }
-      if (url.includes('fate-cards')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve([
-          { id: 'F1', title: 'Fate', text: 'Choose', choices: [
-            { label: 'A', effect: {} },
-            { label: 'B', effect: {} },
-            { label: 'C', effect: {} }
-          ] }
-        ]) });
-      }
-      if (url.includes('divinations')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve(['One']) });
-      }
-      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
-    });
-
     const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
     dom = new JSDOM(html, { runScripts: 'dangerously', url: 'http://localhost' });
     const wnd = dom.window;
