@@ -51,3 +51,4 @@
 - Fixed Tempt Fate handler and UI labels to prevent undefined choices.
 - Hard-wired local decks to remove fetch dependency and speed up tests.
 - Stripped comments from question decks so pull-thread loads Tier 1 questions.
+- Integrated class score constants and trait tracking in State.

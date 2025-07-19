@@ -3,6 +3,18 @@
  * Manages the game's internal state.
  */
 
+const CLASS_SCORES = {
+  Typical:     { points: 2, thread: 0 },
+  Revelatory:  { points: 1, thread: 1 },
+  Wrong:       { points: 0, thread: -1 }
+};
+
+const TRAIT_MAP = {
+  Typical:     { X: +1,  Y: 0,  Z: -1 },
+  Revelatory:  { X: 0,   Y: +2, Z: +1 },
+  Wrong:       { X: -1,  Y: -1, Z: 0  }
+};
+
 const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
@@ -46,6 +58,7 @@ const State = (() => {
     currentCategory: 'Mind, Past',
     divinations: [],
     roundAnswerTally: { A: 0, B: 0, C: 0 },
+    traits: { X: 0, Y: 0, Z: 0 },
     activePowerUps: [],
     answeredThisRound: []
   };
@@ -104,6 +117,7 @@ const State = (() => {
         currentCategory: 'Mind, Past',
         divinations: [],
         roundAnswerTally: { A: 0, B: 0, C: 0 },
+        traits: { X: 0, Y: 0, Z: 0 },
         activePowerUps: []
     };
   };
@@ -362,25 +376,19 @@ const State = (() => {
     const selected = gameState.currentAnswers[idx];
     if (qEngine) qEngine.resolve(question.questionId, idx, { points: 0, thread: 0, traits: {} });
     const cls = selected.answerClass;
+    let isCorrect = cls !== 'Wrong';
+    let threadChange = CLASS_SCORES[cls]?.thread ?? 0;
+    let scoreChange = CLASS_SCORES[cls]?.points ?? 0;
 
-    let isCorrect = false;
-    let threadChange = 0;
-    let scoreChange = 0;
-
-    if (cls === 'Typical') {
-      isCorrect = true;
-      scoreChange += 2;
+    if (isCorrect) {
       gameState.notWrongCount++;
       gameState.correctAnswersThisDifficulty++;
-    } else if (cls === 'Revelatory') {
-      isCorrect = true;
-      scoreChange += 1;
-      threadChange += 1;
-      gameState.notWrongCount++;
-      gameState.correctAnswersThisDifficulty++;
-    } else {
-      threadChange -= 1;
     }
+
+    const traitDelta = selected.traits || TRAIT_MAP[cls];
+    Object.keys(traitDelta).forEach(k => {
+      gameState.traits[k] = (gameState.traits[k] || 0) + traitDelta[k];
+    });
 
     // Apply effects from the active fate card
     if (gameState.activeFateCard) {
