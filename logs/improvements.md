@@ -45,3 +45,4 @@
 - Simplified fate engine validation and removed zod import for direct browser loading.
 - Loaded Zod from CDN for optional browser validation, preparing future state checks.
 - Integrated CDN import for fate engine validation so browser module resolves without bundler.
+- Removed duplicate DYN005 thread bonus to keep start of round balanced.
