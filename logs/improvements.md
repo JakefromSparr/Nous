@@ -52,3 +52,4 @@
 - Hard-wired local decks to remove fetch dependency and speed up tests.
 - Integrated class score constants and trait tracking in State.
 - Forced QuestionEngine to accept loaded JSON deck for reliable draws.
+- Implemented layered trait system with per-question weights and overrides for deeper personality scoring.
