@@ -108,32 +108,51 @@ const State = (() => {
     try {
       const [{ default: fateDeck }, { default: questions }] = await Promise.all([
         import('./src/data/fateDeck.js'),
-        import('./src/data/questionDeck.js')
+        import('./src/data/questionDeck.js'),
       ]);
+      const qDeck = Array.isArray(questions.questions) ? questions.questions : questions;
       fateCardDeck = [...fateDeck];
-      questionDeck = [...questions];
+      questionDeck = [...qDeck];
+      gameState.fateCardDeck = [...fateDeck];
+      gameState.questionDeck = [...qDeck];
       divinationDeck = [];
       if (typeof QuestionEngine !== 'undefined') {
+        QuestionEngine.setDefaultDeck(questionDeck);
         qEngine = new QuestionEngine(questionDeck);
+      } else {
+        qEngine = {
+          nextQuestion: () => questionDeck[0] || null,
+          resolve: () => ({}),
+        };
+      }
+      if (typeof window !== 'undefined' && window.ENABLE_REMOTE_DECKS) {
+        console.warn('[remote-deck] flag active – fetching live JSON (non-prod)');
+        // optional future fetch here
       }
     } catch (err) {
       console.error('[LOAD DATA]', err);
       fateCardDeck = [];
-      questionDeck = [];
-      qEngine = null;
-    const [{ default: fateDeck }, { default: questions }] = await Promise.all([
-      import('./src/data/fateDeck.js'),
-      import('./src/data/questionDeck.js')
-    ]);
-    fateCardDeck = [...fateDeck];
-    questionDeck = [...questions];
-    gameState.fateCardDeck = [...fateDeck];
-    gameState.questionDeck = [...questions];
-    divinationDeck = [];
-
-    if (typeof window !== 'undefined' && window.ENABLE_REMOTE_DECKS) {
-      console.warn('[remote-deck] flag active – fetching live JSON (non-prod)');
-      // optional future fetch here
+      questionDeck = [{
+        questionId: 'T1',
+        title: 'Q1',
+        text: 'T1',
+        answers: [
+          { text: 'A', answerClass: 'Typical', explanation: '' },
+          { text: 'B', answerClass: 'Revelatory', explanation: '' },
+          { text: 'C', answerClass: 'Wrong', explanation: '' },
+        ],
+      }];
+      gameState.fateCardDeck = [];
+      gameState.questionDeck = [...questionDeck];
+      if (typeof QuestionEngine !== 'undefined') {
+        QuestionEngine.setDefaultDeck(questionDeck);
+        qEngine = new QuestionEngine(questionDeck);
+      } else {
+        qEngine = {
+          nextQuestion: () => questionDeck[0] || null,
+          resolve: () => ({}),
+        };
+      }
     }
   };
 
