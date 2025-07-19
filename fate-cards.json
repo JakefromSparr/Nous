@@ -73,7 +73,7 @@
     "title": "The Scholar's Boon",
     "rarity": "Common",
     "tags": ["Utility", "Safety"],
-    "text": "For a moment, the threads of fate seem clear. You are offered a small, but certain, advantage for the next question.",
+    "text": "Scholar's Boon: Your knowledge protects you.\nGain +1 Thread at the start of this round.",
     "choices": [
       {
         "label": "Accept Boon",

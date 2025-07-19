@@ -122,10 +122,6 @@ const State = (() => {
           resolve: () => ({}),
         };
       }
-      if (typeof window !== 'undefined' && window.ENABLE_REMOTE_DECKS) {
-        console.warn('[remote-deck] flag active – fetching live JSON (non-prod)');
-        // optional future fetch here
-      }
     } catch (err) {
       console.error('[LOAD DATA]', err);
       fateCardDeck = [];
