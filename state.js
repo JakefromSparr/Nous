@@ -121,9 +121,6 @@ const State = (() => {
         gameState.thread++; // Scholar's Boon immediate effect
       }
     }
-    if (gameState.activeFateCard && gameState.activeFateCard.id === 'DYN005') {
-      gameState.thread++; // Scholar's Boon immediate effect
-    }
     gameState.pendingFateCard = null;
   };
 
