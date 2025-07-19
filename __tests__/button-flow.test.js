@@ -10,33 +10,9 @@ describe('tempt fate and pull thread UI', () => {
   beforeEach(async () => {
     jest.useFakeTimers();
 
-    global.fetch = jest.fn((url) => {
-      if (url.includes('questions')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve([
-          { questionId: 1, category: 'Mind', title: 'Q1', text: 'T1', answers: [
-            { text: 'A', answerClass: 'Typical' },
-            { text: 'B', answerClass: 'Wrong' },
-            { text: 'C', answerClass: 'Wrong' }
-          ] }
-        ]) });
-      }
-      if (url.includes('fate-cards')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve([
-          { id: 'F1', title: 'FateCard', text: 'Do it', choices: [
-            { label: 'A', effect: {} }
-          ] }
-        ]) });
-      }
-      if (url.includes('divinations')) {
-        return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
-      }
-      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
-    });
-
     const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
     dom = new JSDOM(html, { runScripts: 'dangerously', url: 'http://localhost' });
     const wnd = dom.window;
-    wnd.fetch = global.fetch;
     const inject = (code, type = 'text/javascript') => {
       const s = wnd.document.createElement('script');
       s.textContent = code;
