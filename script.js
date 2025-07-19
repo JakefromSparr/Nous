@@ -128,19 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         attachWelcomeKeys();
         break;
       case 'tempt-fate': {
-        if (typeof FateEngine.draw !== 'function') break;
-        const card = FateEngine.draw();
+        const card = FateEngine.draw();           // random DYN card
         if (!card) break;
-        State.setCurrentFateCard(card);
+        State.setCurrentFateCard(card);           // remember for the choice
         UI.showFateCard(card);
-        UI.showFateChoices(FateEngine.getButtonLabels?.() ?? []);
-        ['btn-1','btn-2','btn-3'].forEach((id,i)=>{
-          document.getElementById(id).onclick = () => {
-            FateEngine.choose?.(i);
-            UI.updateScreen('game-lobby');
-          };
-        });
-        UI.updateScreen('fate-card');
+        UI.showFateChoices(FateEngine.getButtonLabels());
+        UI.updateScreen('fate-card');            // show the Fate screen
         break;
       }
       case 'next-round':

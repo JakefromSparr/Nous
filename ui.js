@@ -262,23 +262,18 @@ const confirmParticipants = () => {
   };
 
   const showFateCard = (card) => {
-    document.getElementById('fate-card-title').textContent = card.title;
-    document.getElementById('fate-card-text').textContent = card.text;
-    const a = card.choices[0]?.label || '';
-    const b = card.choices[1]?.label || '';
-    const c = card.choices[2]?.label || '';
-    document.getElementById('fate-a-text').textContent = a;
-    document.getElementById('fate-b-text').textContent = b;
-    document.getElementById('fate-c-text').textContent = c;
+    document.querySelector('#fate-card-title').textContent = card.title;
+    document.querySelector('#fate-card-text').textContent = card.text;
   };
 
-  const showFateChoices = (labels) => {
-    ['btn-1', 'btn-2', 'btn-3'].forEach((id, i) => {
-      const btn = document.getElementById(id);
-      const label = labels[i] || '';
-      btn.querySelector('.button-label').innerText = label || ' ';
-      btn.disabled = label === '';
-      btn.classList.toggle('hidden', label === '');
+  const showFateChoices = (labels = []) => {
+    const btns = document.querySelectorAll('#controller button');
+    while (labels.length < 3) labels.push('');
+    btns.forEach((btn, i) => {
+      const txt = labels[i] || '';
+      btn.querySelector('.button-label').textContent = txt || ' ';
+      btn.disabled = !txt;
+      btn.classList.toggle('hidden', !txt);
     });
   };
 
