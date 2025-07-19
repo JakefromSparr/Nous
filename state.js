@@ -6,6 +6,7 @@
 const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
+  const qEngine = typeof QuestionEngine !== 'undefined' ? new QuestionEngine() : null;
 
   // Basic fallback Fate Deck in case the external file fails to load
   const defaultFateDeck = [
@@ -269,42 +270,50 @@ const State = (() => {
 
   // --- Question Logic ---
   const getNextQuestion = () => {
-    if (questionDeck.length === 0) {
-      console.warn('[QUESTION]: Deck is empty');
-      return null;
-    }
+    if (qEngine) {
+      const q = qEngine.nextQuestion();
+      if (!q) { console.warn('[QUESTION]: Deck exhausted'); return null; }
+      gameState.currentQuestion = q;
+      gameState.currentAnswers = q.answers.slice();
+    } else {
+      if (questionDeck.length === 0) {
+        console.warn('[QUESTION]: Deck is empty');
+        return null;
+      }
 
-    const { difficultyLevel, answeredQuestionIds } = gameState;
+      const { difficultyLevel, answeredQuestionIds } = gameState;
 
-    const minId = (difficultyLevel - 1) * 10 + 1;
-    const maxId = difficultyLevel * 10 - 1;
+      const minId = (difficultyLevel - 1) * 10 + 1;
+      const maxId = difficultyLevel * 10 - 1;
 
-    let available = questionDeck.filter(q =>
-      q.questionId >= minId &&
-      q.questionId <= maxId &&
-      !answeredQuestionIds.has(q.questionId)
-    );
-
-    if (available.length === 0) {
-      advanceDifficulty();
-      const newMin = (gameState.difficultyLevel - 1) * 10 + 1;
-      const newMax = gameState.difficultyLevel * 10 - 1;
-      available = questionDeck.filter(q =>
-        q.questionId >= newMin &&
-        q.questionId <= newMax &&
+      let available = questionDeck.filter(q =>
+        q.questionId >= minId &&
+        q.questionId <= maxId &&
         !answeredQuestionIds.has(q.questionId)
       );
+
+      if (available.length === 0) {
+        advanceDifficulty();
+        const newMin = (gameState.difficultyLevel - 1) * 10 + 1;
+        const newMax = gameState.difficultyLevel * 10 - 1;
+        available = questionDeck.filter(q =>
+          q.questionId >= newMin &&
+          q.questionId <= newMax &&
+          !answeredQuestionIds.has(q.questionId)
+        );
+      }
+
+      if (available.length === 0) {
+        console.warn('[QUESTION]: No available questions for any difficulty.');
+        return null;
+      }
+
+      const idx = Math.floor(Math.random() * available.length);
+      const q = available[idx];
+      gameState.currentQuestion = q;
+      gameState.currentAnswers = q.answers.slice();
     }
 
-    if (available.length === 0) {
-      console.warn('[QUESTION]: No available questions for any difficulty.');
-      return null;
-    }
-
-    const idx = Math.floor(Math.random() * available.length);
-    const q = available[idx];
-    gameState.currentQuestion = q;
-    gameState.currentAnswers = q.answers.slice();
     shuffleArray(gameState.currentAnswers);
 
     if (gameState.activePowerUps.includes('REMOVE_WRONG_ANSWER')) {
@@ -314,7 +323,7 @@ const State = (() => {
       }
       gameState.activePowerUps = gameState.activePowerUps.filter(p => p !== 'REMOVE_WRONG_ANSWER');
     }
-    return { ...q, answers: gameState.currentAnswers };
+    return { ...gameState.currentQuestion, answers: gameState.currentAnswers };
   };
 
   const evaluateAnswer = (choice) => {
@@ -341,6 +350,7 @@ const State = (() => {
     const idxMap = { A: 0, B: 1, C: 2 };
     const idx = idxMap[choice] ?? 0;
     const selected = gameState.currentAnswers[idx];
+    if (qEngine) qEngine.resolve(question.questionId, idx, { points: 0, thread: 0, traits: {} });
     const cls = selected.answerClass;
 
     let isCorrect = false;

@@ -67,3 +67,7 @@ export class QuestionEngine {
     return ans; // for UI feedback
   }
 }
+
+if (typeof window !== 'undefined') {
+  window.QuestionEngine = QuestionEngine;
+}
