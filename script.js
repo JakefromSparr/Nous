@@ -126,18 +126,22 @@ document.addEventListener('DOMContentLoaded', () => {
         UI.updateScreen('welcome');
         attachWelcomeKeys();
         break;
-      case 'pull-divination':
+      case 'tempt-fate': {
         if (typeof Fate === 'undefined') break;
         const card = Fate.draw();
-        if (card) {
-          UI.showFate(card);
-          UI.setButtonLabels(Fate.getButtonLabels());
-          ['btn-1','btn-2','btn-3'].forEach((id,i)=>{
-            document.getElementById(id).onclick = () => Fate.choose(i);
-          });
-          UI.updateScreen('fate-card');
-        }
+        if (!card) break;
+        State.setCurrentFateCard(card);
+        UI.showFate(card);
+        UI.setButtonLabels(Fate.getButtonLabels());
+        ['btn-1','btn-2','btn-3'].forEach((id,i)=>{
+          document.getElementById(id).onclick = () => {
+            Fate.choose(i);
+            UI.updateScreen('game-lobby');
+          };
+        });
+        UI.updateScreen('fate-card');
         break;
+      }
       case 'next-round':
         State.startNewRound();
         UI.updateDisplayValues(State.getState());

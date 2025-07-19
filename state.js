@@ -63,6 +63,11 @@ const State = (() => {
       questionDeck = await questionsRes.json();
       fateCardDeck = await fateCardsRes.json();
       divinationDeck = await divinationsRes.json();
+      console.table({
+        questions: questionDeck.length,
+        fates: fateCardDeck.length,
+        divs: divinationDeck.length
+      });
     } catch (err) {
       console.error('[LOAD DATA]', err);
       fateCardDeck = [];

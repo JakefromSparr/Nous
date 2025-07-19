@@ -1,7 +1,7 @@
 // === Valid Actions Set === //
 const validActions = new Set([
   'start-game', 'go-rules', 'go-options', 'back-to-welcome',
-  'save-and-quit', 'pull-divination', 'next-round',
+  'save-and-quit', 'tempt-fate', 'next-round',
   'end-round', 'double-points', 'start-question',
   'answer-a', 'answer-b', 'answer-c',
   'challenge-result', 'accept-result', 'return-to-lobby',
@@ -35,7 +35,7 @@ const buttonConfigs = {
   ],
   "game-lobby": [
     { label: "Turn Back", action: "save-and-quit" },
-    { label: "Tempt Fate", action: "pull-divination" },
+    { label: "Tempt Fate", action: "tempt-fate" },
     { label: "Press On", action: "next-round" }
   ],
   "round-lobby": [
@@ -188,8 +188,9 @@ const UI = (() => {
     ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
       const btn = buttons[id];
       const label = arr[i] || '';
-      btn.querySelector('.button-label').innerText = label;
+      btn.querySelector('.button-label').innerText = label || ' ';
       btn.disabled = label === '';
+      btn.classList.toggle('hidden', label === '');
     });
   };
 // Inside the UI IIFE
