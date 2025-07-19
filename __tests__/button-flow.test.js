@@ -1,9 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const { TextEncoder, TextDecoder } = require('util');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { TextEncoder, TextDecoder } from 'util';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-const { JSDOM } = require('jsdom');
+import { JSDOM } from 'jsdom';
 
 describe('tempt fate and pull thread UI', () => {
   let dom;

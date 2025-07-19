@@ -1,5 +1,6 @@
-const { DECK } = require('../src/fate/loadDeck');
+import deck from '../src/data/fateDeck.js';
+import { FateCard } from '../src/fate/schema.js';
 
-test('fate deck loads', () => {
-  expect(DECK.length).toBeGreaterThan(0);
+test('deck validates', () => {
+  deck.forEach(card => expect(() => FateCard.parse(card)).not.toThrow());
 });
