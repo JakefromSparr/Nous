@@ -54,3 +54,4 @@
 - Integrated class score constants and trait tracking in State.
 - Forced QuestionEngine to accept loaded JSON deck for reliable draws.
 - Implemented layered trait system with per-question weights and overrides for deeper personality scoring.
+- Fixed Jest setup and global State reference for headless tests.

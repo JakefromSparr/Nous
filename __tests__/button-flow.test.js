@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { TextEncoder, TextDecoder } from 'util';
+import { jest } from '@jest/globals';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
