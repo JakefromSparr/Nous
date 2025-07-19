@@ -1,5 +1,5 @@
 import { FateCard } from './schema.js';
-import cards from '../../fate-cards.json' assert { type: 'json' };
+import cards from '../data/fateDeck.js';
 
 const sanitize = (card) => ({
   id: card.id,

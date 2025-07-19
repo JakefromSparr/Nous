@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import deckData from '../../fate-cards.json' assert { type: 'json' };
+import deckData from '../data/fateDeck.js';
 import { FateCard } from './schema.js';
 
 const DeckSchema = z.array(FateCard);
