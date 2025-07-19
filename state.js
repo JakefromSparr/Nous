@@ -68,16 +68,6 @@ const State = (() => {
   let questionDeck = [];
   let qEngine = null;
 
-  // Basic fallback Fate Deck in case the external file fails to load
-  const defaultFateDeck = [
-    { id: "DIV001", type: 'DIV', text: "A choice made in haste will ripple outwards." },
-    { id: "DIV002", type: 'DIV', text: "Doubt is a shadow that you cast yourself." },
-    { id: "DIV003", type: 'DIV', text: "The path of least resistance leads to the steepest fall." },
-    { id: "DYN001", type: 'DYN', text: "Whispers of Doubt: The next 'Wrong' answer costs an extra Thread." },
-    { id: "DYN002", type: 'DYN', text: "Sudden Clarity: The first 'Revelatory' answer this round awards bonus points." },
-    { id: "DYN003", type: 'DYN', text: "Shared Burden: If the Thread frays, all players feel the chill." },
-    { id: "DYN005", type: 'DYN', text: "Scholar's Boon: Your knowledge protects you. Gain +1 Thread at the start of this round." }
-  ];
   let fateCardDeck = [];
   let divinationDeck = [];
 
@@ -108,7 +98,9 @@ const State = (() => {
     roundAnswerTally: { A: 0, B: 0, C: 0 },
     traits: { X: 0, Y: 0, Z: 0 },
     activePowerUps: [],
-    answeredThisRound: []
+    answeredThisRound: [],
+    fateCardDeck: [],
+    questionDeck: []
   };
 
   // Load decks from local files and prepare the question engine.
@@ -129,6 +121,19 @@ const State = (() => {
       fateCardDeck = [];
       questionDeck = [];
       qEngine = null;
+    const [{ default: fateDeck }, { default: questions }] = await Promise.all([
+      import('./src/data/fateDeck.js'),
+      import('./src/data/questionDeck.js')
+    ]);
+    fateCardDeck = [...fateDeck];
+    questionDeck = [...questions];
+    gameState.fateCardDeck = [...fateDeck];
+    gameState.questionDeck = [...questions];
+    divinationDeck = [];
+
+    if (typeof window !== 'undefined' && window.ENABLE_REMOTE_DECKS) {
+      console.warn('[remote-deck] flag active – fetching live JSON (non-prod)');
+      // optional future fetch here
     }
   };
 
@@ -158,7 +163,10 @@ const State = (() => {
         divinations: [],
         roundAnswerTally: { A: 0, B: 0, C: 0 },
         traits: { X: 0, Y: 0, Z: 0 },
-        activePowerUps: []
+        activePowerUps: [],
+        answeredThisRound: [],
+        fateCardDeck: gameState.fateCardDeck,
+        questionDeck: gameState.questionDeck
     };
   };
 
@@ -245,7 +253,8 @@ const State = (() => {
       console.log('[FATE]: A fate is already pending.');
       return null;
     }
-    const deck = fateCardDeck.length ? fateCardDeck : defaultFateDeck;
+    const deck = fateCardDeck;
+    if (deck.length === 0) { console.warn('[FATE]: Deck is empty'); return null; }
     const drawn = deck[Math.floor(Math.random() * deck.length)];
     gameState.pendingFateCard = drawn;
     return drawn;

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "script.js",
+  "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "install": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci"
   },
   "keywords": [],
@@ -14,9 +15,6 @@
     "@testing-library/dom": "^10.4.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom"
   },
   "dependencies": {
     "zod": "^4.0.5"
