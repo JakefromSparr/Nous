@@ -81,6 +81,19 @@ logs/improvements.md
 
 We welcome thoughtful contributions—because Nous is always learning from its players.
 
+🌐 Deployment
+
+After building the project you can publish the contents of `dist/` to GitHub Pages:
+
+```bash
+npm install
+npm run build
+git checkout -b gh-pages
+git add dist -f
+git commit -m "Deploy to GitHub Pages"
+git subtree push --prefix dist origin gh-pages
+```
+
 ⸻
 
 Prepare yourself. The questions await—and they already know more about you than you realize.
