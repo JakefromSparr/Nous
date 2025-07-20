@@ -504,11 +504,18 @@ const State = (() => {
     }
   };
 
-  const loadGame = () => {
+  const loadGame = async () => {
     try {
       const data = localStorage.getItem('nous-save');
       if (!data) return false;
       const saved = JSON.parse(data);
+      const { validateGameState } = await import('./validator.js');
+      try {
+        validateGameState(saved);
+      } catch (err) {
+        console.error('[LOAD VALIDATION]', err);
+        return false;
+      }
       gameState = { ...gameState, ...saved };
       return true;
     } catch (err) {
