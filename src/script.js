@@ -1,7 +1,7 @@
 // The main engine and controller for the Nous game.
 // Initializes the game and imports supporting modules.
-import './state.js';
-import './ui.js';
+import { State } from './state.js';
+import { UI } from './ui.js';
 import './engine/questionEngine.js';
 import './fate/fateEngine.js';
 
@@ -11,6 +11,8 @@ import './fate/fateEngine.js';
 document.addEventListener('DOMContentLoaded', () => {
   const controller = document.getElementById('controller');
   const FateEngine = window.Fate || {};
+  UI.initialize();
+  State.currentState = {};
 
   // --- Game Initialization ---
   async function init() {

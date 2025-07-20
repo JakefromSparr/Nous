@@ -8,7 +8,7 @@ let TRAIT_MAP;
 let CLASS_TRAIT_BASE;
 let TRAIT_LOADINGS;
 
-const State = (() => {
+export const State = (() => {
   // --- Game Data ---
   let questionDeck = [];
   let qEngine = null;
