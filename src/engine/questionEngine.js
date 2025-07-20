@@ -20,7 +20,10 @@ export class QuestionEngine {
     this.tier = 'Tier1';
     this.answered = new Set();
     this.drawnThisTier = 0;
-    this.deck = Array.isArray(questionDeck) ? questionDeck : [];
+    // Filter out any malformed questions lacking at least three answers
+    this.deck = Array.isArray(questionDeck)
+      ? questionDeck.filter(q => Array.isArray(q.answers) && q.answers.length >= 3)
+      : [];
     this.pools = {
       Tier1: this.deck.filter(q => q.difficultyTier === 'Tier1'),
       Tier2: this.deck.filter(q => q.difficultyTier === 'Tier2'),

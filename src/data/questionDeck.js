@@ -388,8 +388,24 @@ export default [
     "category": "Mind",
     "difficultyTier": "Tier2",
     "title": "All Cretans",
-    "text": "TBD – please provide final wording & answers",
-    "answers": []
+    "text": "What do all Cretans supposedly do, according to the famous paradox?",
+    "answers": [
+      {
+        "text": "Lie",
+        "answerClass": "Typical",
+        "explanation": "Epimenides the Cretan claimed that all Cretans are liars."
+      },
+      {
+        "text": "Tell the truth",
+        "answerClass": "Revelatory",
+        "explanation": "If they always lied the statement could not be trusted. Sometimes a Cretan speaks true."
+      },
+      {
+        "text": "Eat olives",
+        "answerClass": "Wrong",
+        "explanation": "A culinary guess, but irrelevant to the logical puzzle."
+      }
+    ]
   },
   {
     "questionId": 209,
