@@ -320,3 +320,6 @@ const confirmParticipants = () => {
     getWelcomeSelection
   };
 })();
+if (typeof window !== 'undefined') {
+  window.UI = UI;
+}
