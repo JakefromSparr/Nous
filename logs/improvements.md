@@ -59,3 +59,5 @@
 - Removed divination mechanics and standardized fate card UI calls.
 - Added ESLint/Prettier, offline deck imports, and CI workflow for consistent development.
 - Fixed Tempt Fate button reset and cleaned DYN005 text for consistent fate card UI.
+
+- Added Vite dev dependency so `npm run dev` launches correctly for local playtesting.
