@@ -26,8 +26,8 @@ describe('basic playthrough', () => {
       .replace(/export const (\w+) =/g, 'window.$1 =');
     inject(mod('../src/engine/constants.js'));
     inject(mod('../src/engine/traitLoadings.js'));
-    inject(fs.readFileSync(path.join(__dirname, '../state.js'), 'utf8'));
-    inject(fs.readFileSync(path.join(__dirname, '../ui.js'), 'utf8'));
+    inject(fs.readFileSync(path.join(__dirname, '../src/state.js'), 'utf8'));
+    inject(fs.readFileSync(path.join(__dirname, '../src/ui.js'), 'utf8'));
     inject(fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8'), 'module');
     inject(fs.readFileSync(path.join(__dirname, '../script.js'), 'utf8'));
     wnd.document.dispatchEvent(new wnd.Event('DOMContentLoaded'));

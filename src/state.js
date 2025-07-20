@@ -57,10 +57,10 @@ const State = (() => {
   const loadData = async () => {
     try {
       const [{ default: fateDeck }, questionsMod] = await Promise.all([
-        import('./src/data/fateDeck.js'),
-        import('./questions/questions.json', { with: { type: 'json' } })
-          .catch(() => import('./src/data/questions.json', { with: { type: 'json' } }))
-          .catch(() => import('./src/data/questionDeck.js')),
+        import('./data/fateDeck.js'),
+        import('../questions/questions.json', { with: { type: 'json' } })
+          .catch(() => import('./data/questions.json', { with: { type: 'json' } }))
+          .catch(() => import('./data/questionDeck.js')),
       ]);
       const qData = questionsMod.default ?? questionsMod;
       const qDeck = Array.isArray(qData.questions) ? qData.questions : qData;
@@ -461,7 +461,7 @@ const State = (() => {
       const data = localStorage.getItem('nous-save');
       if (!data) return false;
       const saved = JSON.parse(data);
-      const { validateGameState } = await import('./validator.js');
+      const { validateGameState } = await import('../validator.js');
       try {
         validateGameState(saved);
       } catch (err) {

@@ -26,8 +26,8 @@ describe('tempt fate and pull thread UI', () => {
       .replace(/export const (\w+) =/g, 'window.$1 =');
     inject(mod('../src/engine/constants.js'));
     inject(mod('../src/engine/traitLoadings.js'));
-    inject(fs.readFileSync(path.join(__dirname, '../state.js'), 'utf8'));
-    inject(fs.readFileSync(path.join(__dirname, '../ui.js'), 'utf8'));
+    inject(fs.readFileSync(path.join(__dirname, '../src/state.js'), 'utf8'));
+    inject(fs.readFileSync(path.join(__dirname, '../src/ui.js'), 'utf8'));
     wnd.Fate = {
       draw: () => ({ id: 'F1', title: 'FateCard', text: 'Do it', choices: [{ label: 'A', effect: {} }] }),
       getButtonLabels: () => ['A', '', ''],

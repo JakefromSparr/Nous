@@ -1,4 +1,4 @@
-import '../state.js';
+import '../src/state.js';
 
 test('corrupted save data is rejected', async () => {
   localStorage.setItem('nous-save', '{"bad":true}');
