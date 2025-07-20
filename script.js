@@ -199,6 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
           UI.updateScreen('question');
+        } else {
+          alert('The thread has nothing left to reveal.');
+          UI.updateScreen('round-lobby');
         }
         break;
 
