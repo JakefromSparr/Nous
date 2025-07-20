@@ -68,4 +68,5 @@
 - Centralized trait constants in engine modules for easier reuse and maintenance.
 - Configured Vite base path and documented GitHub Pages deployment.
 - Fixed relative script path so GitHub Pages loads the main module.
+- Added npm deploy script for GitHub Pages so builds publish easily.
 - Exported State and UI modules and used explicit imports to avoid undefined references.
