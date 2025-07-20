@@ -62,3 +62,4 @@
 
 - Added Vite dev dependency so `npm run dev` launches correctly for local playtesting.
 - Alerted when question deck runs out so players know the thread is spent.
+- Loaded questions from JSON with JS fallback so new decks appear in game.
