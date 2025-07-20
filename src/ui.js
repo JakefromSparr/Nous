@@ -83,7 +83,7 @@ function validateButtonActions(config) {
 validateButtonActions(buttonConfigs);
 
 // === UI Module for Nous === //
-const UI = (() => {
+export const UI = (() => {
   const appContainer = document.getElementById('app-container');
   const controller = document.getElementById('controller');
   const agentLog = document.getElementById('last-change');
@@ -102,6 +102,10 @@ const UI = (() => {
   };
 
   const screens = document.querySelectorAll('.game-screen');
+
+  const initialize = () => {
+    // UI initialization placeholder
+  };
 
   // --- Welcome Screen Option Navigation ---
   const welcomeOptions = Array.from(document.querySelectorAll('#welcome-options li'));
@@ -301,6 +305,7 @@ const confirmParticipants = () => {
   };
 
   return {
+    initialize,
     updateScreen,
     configureButtons,
     updateDisplayValues,
