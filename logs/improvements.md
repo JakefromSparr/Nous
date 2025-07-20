@@ -65,3 +65,4 @@
 - Loaded questions from JSON with JS fallback so new decks appear in game.
 - Filtered malformed questions and completed missing Tier 2 entry so draws advance past first 4 cards without crashing.
 - Centralized trait constants in engine modules for easier reuse and maintenance.
+- Configured Vite base path and documented GitHub Pages deployment.
