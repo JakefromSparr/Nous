@@ -39,3 +39,7 @@ export const TRAIT_LOADINGS = {
   208: { /* TBD */ },
   209: { axisWeight: { Z: 0 } }
 };
+
+if (typeof window !== 'undefined') {
+  window.TRAIT_LOADINGS = TRAIT_LOADINGS;
+}

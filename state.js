@@ -3,65 +3,10 @@
  * Manages the game's internal state.
  */
 
-const CLASS_SCORES = {
-  Typical:     { points: 2, thread: 0 },
-  Revelatory:  { points: 1, thread: 1 },
-  Wrong:       { points: 0, thread: -1 }
-};
-
-const TRAIT_MAP = {
-  Typical:     { X: +1,  Y: 0,  Z: -1 },
-  Revelatory:  { X: 0,   Y: +2, Z: +1 },
-  Wrong:       { X: -1,  Y: -1, Z: 0  }
-};
-
-const CLASS_TRAIT_BASE = {
-  Typical:    { X: -1, Y: -1, Z: -1 },
-  Revelatory: { X: +2, Y: +3, Z: +2 },
-  Wrong:      { X: -2, Y: -2, Z: -2 }
-};
-
-const TRAIT_LOADINGS = {
-  /* ---------- Tier-1 ---------- */
-  101: { axisWeight: { Z: 0 } },
-  103: { axisWeight: { Z: 0 } },
-  104: { axisWeight: { Z: 0.5 } },
-  105: { axisWeight: { Z: 0 } },
-  106: { axisWeight: { Z: 0 } },
-  107: { axisWeight: { Z: 0.5 } },
-
-  /* Custom per-answer override example */
-  108: {
-    axisWeight: { Z: 1.5 },
-    overrides: {
-      Typical:     { Z: -3 },
-      Revelatory:  { X: -1, Y: 0,  Z: +2 },
-      Wrong:       { X: -2, Y: +1, Z: +1 }
-    }
-  },
-
-  109: { axisWeight: { Z: 1.5 } },
-
-  /* ---------- Tier-2 ---------- */
-  201: { axisWeight: { Z: 0 } },
-  202: { axisWeight: { Z: 1.5 } },
-  203: { axisWeight: { Z: 0 } },
-  204: { axisWeight: { Z: 0 } },
-
-  205: {
-    axisWeight: { X: 0.5, Y: 0.7, Z: 1.2 },
-    overrides: {
-      Typical:     { X: +1, Y: -2, Z: -2 },
-      Revelatory:  { X: -2, Y: +4, Z: +2 },
-      Wrong:       { X: -2, Y: +1, Z: -3 }
-    }
-  },
-
-  206: { axisWeight: { Z: 1 } },
-  207: { axisWeight: { Z: 1.5 } },
-  208: { /* TBD */ },
-  209: { axisWeight: { Z: 0 } }
-};
+let CLASS_SCORES;
+let TRAIT_MAP;
+let CLASS_TRAIT_BASE;
+let TRAIT_LOADINGS;
 
 const State = (() => {
   // --- Game Data ---
@@ -102,6 +47,13 @@ const State = (() => {
   };
 
   // Load decks from local files and prepare the question engine.
+  if (typeof window !== 'undefined') {
+    CLASS_SCORES = window.CLASS_SCORES;
+    TRAIT_MAP = window.TRAIT_MAP;
+    CLASS_TRAIT_BASE = window.CLASS_TRAIT_BASE;
+    TRAIT_LOADINGS = window.TRAIT_LOADINGS;
+  }
+
   const loadData = async () => {
     try {
       const [{ default: fateDeck }, questionsMod] = await Promise.all([
