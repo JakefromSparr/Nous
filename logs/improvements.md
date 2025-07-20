@@ -67,3 +67,4 @@
 - Validated saved state before loading to prevent corrupt resumes.
 - Centralized trait constants in engine modules for easier reuse and maintenance.
 - Configured Vite base path and documented GitHub Pages deployment.
+- Fixed relative script path so GitHub Pages loads the main module.
