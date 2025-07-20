@@ -254,11 +254,11 @@ const confirmParticipants = () => {
   };
 
   const showQuestion = (q) => {
-    document.getElementById('question-title').textContent = q.title;
-    document.getElementById('question-text').textContent = q.text;
-    document.getElementById('answer-a').textContent = q.choices.A;
-    document.getElementById('answer-b').textContent = q.choices.B;
-    document.getElementById('answer-c').textContent = q.choices.C;
+    document.getElementById('question-title').textContent = q.title || '';
+    document.getElementById('question-text').textContent = q.text || '';
+    document.getElementById('answer-a').textContent = q.choices?.A || '';
+    document.getElementById('answer-b').textContent = q.choices?.B || '';
+    document.getElementById('answer-c').textContent = q.choices?.C || '';
   };
 
   const showFateCard = (card) => {
