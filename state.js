@@ -106,7 +106,7 @@ const State = (() => {
     try {
       const [{ default: fateDeck }, { default: questions }] = await Promise.all([
         import('./src/data/fateDeck.js'),
-        import('./src/data/questionDeck.js'),
+        import('./questions/questions.json', { with: { type: 'json' } }),
       ]);
       const qDeck = Array.isArray(questions.questions) ? questions.questions : questions;
       fateCardDeck = [...fateDeck];
