@@ -15,3 +15,9 @@ export const CLASS_TRAIT_BASE = {
   Revelatory: { X: +2, Y: +3, Z: +2 },
   Wrong:      { X: -2, Y: -2, Z: -2 }
 };
+
+if (typeof window !== 'undefined') {
+  window.CLASS_SCORES = CLASS_SCORES;
+  window.TRAIT_MAP = TRAIT_MAP;
+  window.CLASS_TRAIT_BASE = CLASS_TRAIT_BASE;
+}

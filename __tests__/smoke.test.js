@@ -22,6 +22,10 @@ describe('basic playthrough', () => {
       s.type = type;
       wnd.document.body.appendChild(s);
     };
+    const mod = p => fs.readFileSync(path.join(__dirname, p), 'utf8')
+      .replace(/export const (\w+) =/g, 'window.$1 =');
+    inject(mod('../src/engine/constants.js'));
+    inject(mod('../src/engine/traitLoadings.js'));
     inject(fs.readFileSync(path.join(__dirname, '../state.js'), 'utf8'));
     inject(fs.readFileSync(path.join(__dirname, '../ui.js'), 'utf8'));
     inject(fs.readFileSync(path.join(__dirname, '../src/fate/fateEngine.js'), 'utf8'), 'module');
