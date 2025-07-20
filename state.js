@@ -104,11 +104,14 @@ const State = (() => {
   // Load decks from local files and prepare the question engine.
   const loadData = async () => {
     try {
-      const [{ default: fateDeck }, { default: questions }] = await Promise.all([
+      const [{ default: fateDeck }, questionsMod] = await Promise.all([
         import('./src/data/fateDeck.js'),
-        import('./src/data/questionDeck.js'),
+        import('./questions/questions.json', { with: { type: 'json' } })
+          .catch(() => import('./src/data/questions.json', { with: { type: 'json' } }))
+          .catch(() => import('./src/data/questionDeck.js')),
       ]);
-      const qDeck = Array.isArray(questions.questions) ? questions.questions : questions;
+      const qData = questionsMod.default ?? questionsMod;
+      const qDeck = Array.isArray(qData.questions) ? qData.questions : qData;
       fateCardDeck = [...fateDeck];
       questionDeck = [...qDeck];
       gameState.fateCardDeck = [...fateDeck];
