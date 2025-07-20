@@ -61,3 +61,4 @@
 - Fixed Tempt Fate button reset and cleaned DYN005 text for consistent fate card UI.
 
 - Added Vite dev dependency so `npm run dev` launches correctly for local playtesting.
+- Alerted when question deck runs out so players know the thread is spent.
