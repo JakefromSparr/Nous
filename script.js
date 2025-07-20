@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Game Initialization ---
   async function init() {
     await State.loadData();
-    const resumed = State.loadGame();
+    const resumed = await State.loadGame();
     if (resumed) {
       UI.updateDisplayValues(State.getState());
       UI.updateScreen(State.getState().currentScreen || 'game-lobby');
